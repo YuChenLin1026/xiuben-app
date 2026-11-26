@@ -26,7 +26,8 @@ a{color:#fff}a:hover{color:#E3EBDC}
 </head><body>
 <template id="tpl">
 <div style="width: 390px; height: 844px; position: relative; overflow: hidden; background: #0E0E0C; color: #fff; font-family: -apple-system, 'SF Pro Text', 'Noto Sans TC', sans-serif">
-<img class="cam" src="img/photo1.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: blur(1.5px) brightness(.62)">
+<sc-if value="{{ noCam }}" hint-placeholder-val="{{ true }}"><img class="cam" src="img/photo1.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: blur(1.5px) brightness(.62)"></sc-if>
+<video id="camv" autoplay playsinline muted style="{{ vidStyle }}"></video>
 <div style="position: absolute; inset: 0; background: radial-gradient(56% 34% at 50% 44%, rgba(0,0,0,0) 0, rgba(0,0,0,.55) 100%)"></div>
 <div style="position: absolute; left: 0; right: 0; top: 54px; display: flex; align-items: center; justify-content: space-between; padding: 0 16px">
 <a class="btn" href="Who.html" aria-label="返回" style="display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: rgba(255,255,255,.16); backdrop-filter: blur(10px)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 5-7 7 7 7"/></svg></a>
@@ -41,6 +42,7 @@ a{color:#fff}a:hover{color:#E3EBDC}
 <div class="line"></div>
 </div>
 <p class="hint" style="position: absolute; left: 0; right: 0; top: 500px; margin: 0; text-align: center; font-size: 16px; font-weight: 500">對準瓶蓋上的 QR code</p>
+<sc-if value="{{ msg }}" hint-placeholder-val="{{ false }}"><p role="status" style="position: absolute; left: 40px; right: 40px; top: 186px; margin: 0; padding: 8px 12px; border-radius: 14px; background: rgba(0,0,0,.55); text-align: center; font-size: 13px; line-height: 1.5">{{ msg }}</p></sc-if>
 <p style="position: absolute; left: 32px; right: 32px; top: 530px; margin: 0; text-align: center; font-size: 13px; line-height: 1.6; color: rgba(255,255,255,.75)">每一瓶都有自己的 QR code，掃到哪一瓶，這次就用哪一瓶。</p>
 <div style="position: absolute; left: 20px; right: 20px; bottom: 44px; display: flex; flex-direction: column; gap: 10px">
 <a class="btn" href="Found.html" style="display: grid; place-items: center; min-height: 56px; border-radius: 28px; background: #fff; color: #1F1D1A; font-size: 17px; font-weight: 500; text-decoration: none">（原型）模擬掃到新藥瓶</a>
@@ -64,7 +66,36 @@ a{color:#fff}a:hover{color:#E3EBDC}
 <script>
 
 class Component extends DCLogic {
-  renderVals() { return { showUsed: !!this.state?.u, used: () => this.setState({ u: true }), close: () => this.setState({ u: false }) }; }
+  constructor(p){ super(p); this.state = { u: false, cam: false, msg: '' }; }
+  componentDidMount(){
+    const md = navigator.mediaDevices;
+    if (!md || !md.getUserMedia) { this.setState({ msg: '這個瀏覽器開不了相機，先用下面的按鈕模擬。' }); return; }
+    md.getUserMedia({ video: { facingMode: 'environment', width: { ideal: 1280 }, height: { ideal: 720 } }, audio: false }).then(st => {
+      this.st = st; const v = document.getElementById('camv'); if (!v) return;
+      v.srcObject = st; v.play().catch(() => {}); this.setState({ cam: true, msg: '' }); this.loadQR();
+    }).catch(() => this.setState({ msg: '沒有拿到相機權限。可以到設定允許相機，或先用下面的按鈕模擬。' }));
+    addEventListener('pagehide', () => this.componentWillUnmount());
+  }
+  componentWillUnmount(){ clearInterval(this.iv); if (this.st) this.st.getTracks().forEach(t => t.stop()); }
+  loadQR(){
+    const go = () => { this.cv = document.createElement('canvas'); this.iv = setInterval(() => this.tick(), 250); };
+    if (window.jsQR) return go();
+    const sc = document.createElement('script'); sc.src = 'https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js'; sc.onload = go; document.head.appendChild(sc);
+  }
+  tick(){
+    const v = document.getElementById('camv'); if (!v || v.readyState < 2 || this.state.u) return;
+    const w = 480, h = Math.round(w * v.videoHeight / v.videoWidth) || 270, c = this.cv; c.width = w; c.height = h;
+    const x = c.getContext('2d', { willReadFrequently: true }); x.drawImage(v, 0, 0, w, h);
+    const r = window.jsQR(x.getImageData(0, 0, w, h).data, w, h, { inversionAttempts: 'dontInvert' }); if (!r) return;
+    const m = /XIUBEN[^0-9]*0?([1-4])/i.exec(r.data);
+    if (m) { clearInterval(this.iv); if (navigator.vibrate) navigator.vibrate(60); location.href = 'Found.html?scanned=' + encodeURIComponent(['No.01 清嵐', 'No.02 玉容', 'No.03 潤金', 'No.04 棲月'][m[1] - 1]); }
+    else if (this.state.msg !== '這不是岫本藥瓶的 QR code，換瓶蓋上的那個再掃一次。') this.setState({ msg: '這不是岫本藥瓶的 QR code，換瓶蓋上的那個再掃一次。' });
+  }
+  renderVals() {
+    const s = this.state;
+    return { showUsed: !!s.u, used: () => this.setState({ u: true }), close: () => this.setState({ u: false }), noCam: !s.cam, msg: s.msg,
+      vidStyle: 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:' + (s.cam ? 'block' : 'none') };
+  }
 }
 
 dcMount(Component, {});

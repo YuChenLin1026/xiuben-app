@@ -57,7 +57,12 @@
   }
   function morph(parent, vs) {
     const kids = Array.from(parent.childNodes);
+    const same = (k, v) => k && (v.t === 3 ? k.nodeType === 3 : k.nodeType === 1 && k.localName === v.tag && k.namespaceURI === v.ns && (k.id || '') === (v.a.id || ''));
     vs.forEach((v, i) => {
+      if (v.t === 1 && v.a.id && !same(kids[i], v)) { // elements with an id keep their node (e.g. live <video>)
+        const j = kids.findIndex((k, n) => n > i && same(k, v));
+        if (j > 0) { parent.insertBefore(kids[j], kids[i] || null); kids.splice(i, 0, kids.splice(j, 1)[0]); }
+      }
       const k = kids[i];
       if (k && v.t === 3 && k.nodeType === 3) { if (k.nodeValue !== v.v) k.nodeValue = v.v; }
       else if (k && v.t === 1 && k.nodeType === 1 && k.localName === v.tag && k.namespaceURI === v.ns) patch(k, v);
