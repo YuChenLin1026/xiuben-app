@@ -78,6 +78,15 @@
     c.__render(); c.componentDidMount && c.componentDidMount();
     addEventListener('pagehide', () => c.componentWillUnmount && c.componentWillUnmount());
   };
+
+  // when shown inside the product website: tell it which screen is open, pass scrolling through
+  if (window.parent !== window) {
+    addEventListener('DOMContentLoaded', () => { try { parent.postMessage({ xiuben: 'page', page: location.pathname.split('/').pop() || 'index.html' }, '*'); } catch (e) {} });
+    addEventListener('wheel', e => {
+      for (let n = e.target; n && n !== document.body; n = n.parentElement) { const cs = n.nodeType === 1 && getComputedStyle(n); if (cs && /auto|scroll/.test(cs.overflowY) && n.scrollHeight > n.clientHeight + 2) { const atEnd = e.deltaY > 0 ? n.scrollTop + n.clientHeight >= n.scrollHeight - 1 : n.scrollTop <= 0; if (!atEnd) return; } }
+      try { parent.postMessage({ xiuben: 'wheel', deltaY: e.deltaY, deltaX: e.deltaX, deltaMode: e.deltaMode }, '*'); } catch (err) {}
+    }, { passive: true });
+  }
   // fit the 390×844 screen to the window
   function fit() {
     const s = Math.min(innerWidth / 390, innerHeight / 844), el = document.getElementById('screen');
