@@ -25,6 +25,7 @@ a{color:#fff}a:hover{color:#E3EBDC}
 .card{transition:transform .15s,background .2s}.card:active{transform:scale(.97)}
 </style>
 
+<script src="sound.js"></script>
 <script src="dc.js"></script>
 </head><body>
 <template id="tpl">
@@ -84,7 +85,7 @@ a{color:#fff}a:hover{color:#E3EBDC}
 <script>
 
 class Component extends DCLogic {
-  constructor(p){ super(p); this.state = { left: 600, paused: false, music: true, speed: 1 }; }
+  constructor(p){ super(p); this.state = { left: 600, paused: false, music: false, speed: 1 }; }
   componentDidMount(){ this.t = setInterval(() => { if (!this.state.paused && this.state.left > 0) this.setState({ left: Math.max(0, this.state.left - this.state.speed) }); }, 1000); }
   componentWillUnmount(){ clearInterval(this.t); }
   renderVals() {
@@ -96,7 +97,7 @@ class Component extends DCLogic {
       pauseLabel: s.paused ? '繼續' : '暫停',
       togglePause: () => this.setState({ paused: !s.paused }),
       playing: s.music, paused: !s.music, eqClass: s.music && !s.paused ? '' : 'off', musicAria: s.music ? '暫停音樂' : '播放音樂',
-      toggleMusic: () => this.setState({ music: !s.music }),
+      toggleMusic: () => { if (window.XB) XB.music(!s.music, .8); this.setState({ music: !s.music }); },
       finished: s.left === 0, notFinished: s.left > 0, asking: !!s.ask && s.left > 0,
       askEnd: () => this.setState({ ask: true }), keep: () => this.setState({ ask: false }),
       fastLabel: s.speed > 1 ? '正常速度' : '示範加速',

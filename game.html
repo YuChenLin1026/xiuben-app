@@ -6,6 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#BFD8E6">
 <title>岫本・小岫呼吸飛行</title>
+<script src="sound.js"></script>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@700&display=swap">
 <style>
 :root{--ink:#1F1D1A;--green:#4F6644;--deep:#2F3C2A;--paper:#F4F1EB;--muted:#5E584F}
@@ -92,21 +93,11 @@ addEventListener('resize', resize); resize();
 function seg(id, set) { $(id).addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; [...$(id).children].forEach(x => x.setAttribute('aria-pressed', x === b)); set(b.dataset.v); }); }
 seg('segWho', v => who = v); seg('segIn', v => mode = v);
 
-// ---------- sound (generated files; silent if missing) ----------
-let ac = null; const buf = {};
-function audioInit() {
-  if (ac) { ac.resume && ac.resume(); return; }
-  const A = window.AudioContext || window.webkitAudioContext; if (!A) return; ac = new A();
-  ['sounds/bgm', 'sounds/star', 'sounds/pop', 'sounds/win', 'voice/in', 'voice/out', 'voice/s6'].forEach(k =>
-    fetch(k + '.mp3').then(r => r.ok ? r.arrayBuffer() : Promise.reject()).then(a => new Promise((ok, no) => ac.decodeAudioData(a, ok, no))).then(b => buf[k] = b).catch(() => {}));
-}
-let bgm = null;
-function play(k, vol = 1, loop = false) {
-  if (!ac || !buf[k]) return null; const s = ac.createBufferSource(), g = ac.createGain();
-  s.buffer = buf[k]; s.loop = loop; g.gain.value = vol; s.connect(g); g.connect(ac.destination); s.start(); return { s, g };
-}
-function startBgm() { stopBgm(); const t = () => { if (buf['sounds/bgm']) bgm = play('sounds/bgm', .45, true); else if (running) setTimeout(t, 500); }; t(); }
-function stopBgm() { try { bgm && bgm.s.stop(); } catch (e) {} bgm = null; }
+// ---------- sound (shared XB module: generated files, or a soft music-box lullaby) ----------
+function audioInit() { if (!window.XB) return; XB.unlock(); XB.preload(['voice/in', 'voice/out', 'voice/s6']); }
+function play(k, vol) { if (!window.XB) return; if (k.startsWith('voice/')) XB.say(k.slice(6), 1.4 * (vol || 1)); else XB.fx(k.slice(7)); }
+function startBgm() { if (window.XB) XB.music(true, .6); }
+function stopBgm() { if (window.XB) XB.music(false); }
 
 // ---------- breathing target ----------
 const R = () => RHY[who];

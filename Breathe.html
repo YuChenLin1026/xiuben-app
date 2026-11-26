@@ -38,6 +38,7 @@ a{color:#2F3C2A}a:hover{color:#1F1D1A}
 .tg{transition:background .2s,color .2s}
 </style>
 
+<script src="sound.js"></script>
 <script src="dc.js"></script>
 </head><body>
 <template id="tpl">
@@ -94,7 +95,7 @@ a{color:#2F3C2A}a:hover{color:#1F1D1A}
 class Component extends DCLogic {
   constructor(p){ super(p); this.state = { on: false, t: 0, n: 0, music: true, voice: true }; }
   componentWillUnmount(){ clearInterval(this.iv); this.stopAudio(); }
-  audio(){ if (!this.ac) { const A = window.AudioContext || window.webkitAudioContext; if (!A) return null; this.ac = new A(); this.out = this.ac.createGain(); this.out.gain.value = .5; this.out.connect(this.ac.destination); } if (this.ac.state === 'suspended') this.ac.resume(); return this.ac; }
+  audio(){ if (!this.ac) { const A = window.AudioContext || window.webkitAudioContext; if (!A) return null; try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch (e) {} this.ac = new A(); this.out = this.ac.createGain(); this.out.gain.value = .5; this.out.connect(this.ac.destination); } if (this.ac.state === 'suspended') this.ac.resume(); return this.ac; }
   stopAudio(){ try { if (this.vsrc) this.vsrc.stop(); } catch (e) {} }
   tone(f, when, dur, vol, type){ const ac = this.ac; if (!ac) return; const o = ac.createOscillator(), g = ac.createGain(); o.type = type || 'triangle'; o.frequency.value = f; const t0 = ac.currentTime + when; g.gain.setValueAtTime(0, t0); g.gain.linearRampToValueAtTime(vol, t0 + .02); g.gain.exponentialRampToValueAtTime(.0005, t0 + dur); o.connect(g); g.connect(this.out); o.start(t0); o.stop(t0 + dur + .05); }
   pad(root){ const ac = this.ac; if (!ac) return; [1, 1.5, 2].forEach((m, i) => { const o = ac.createOscillator(), g = ac.createGain(), f = ac.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = 900; o.type = 'sawtooth'; o.frequency.value = root * m; o.detune.value = i * 6 - 6; const t0 = ac.currentTime; g.gain.setValueAtTime(0, t0); g.gain.linearRampToValueAtTime(.022, t0 + 1.5); g.gain.linearRampToValueAtTime(.0001, t0 + 7); o.connect(f); f.connect(g); g.connect(this.out); o.start(t0); o.stop(t0 + 7.1); }); }
@@ -110,7 +111,7 @@ class Component extends DCLogic {
   beat(t){
     const ph = t % 7, round = Math.floor(t / 7), m = this.state.music;
     const roots = [130.81, 110, 87.31, 98];
-    if (ph === 0) { if (m) { this.pad(roots[round % 4]); [392, 440, 523.25].forEach((f, i) => this.tone(f, i * 1, 1.1, .16)); } this.say('跟小岫一起，慢慢吸～'); }
+    if (ph === 0) { if (m) { [392, 440, 523.25].forEach((f, i) => this.tone(f, i * 1, 1.1, .16)); } this.say('跟小岫一起，慢慢吸～'); }
     if (ph === 3 && m) this.tone(659.25, 0, 1.4, .1, 'sine');
     if (ph === 4) { if (m) [587.33, 523.25, 440, 392].forEach((f, i) => this.tone(f, i * .75, 1, .14)); this.say('慢慢吐～'); }
   }
@@ -125,10 +126,10 @@ class Component extends DCLogic {
       musicOn: s.music ? 'true' : 'false', voiceOn: s.voice ? 'true' : 'false',
       musicStyle: 'display:inline-flex;align-items:center;gap:4px;min-height:36px;padding:0 12px;border-radius:18px;border:0;font:inherit;font-size:13px;cursor:pointer;' + (s.music ? 'background:#2F3C2A;color:#fff' : 'background:rgba(255,255,255,.7);color:#2F3C2A'),
       voiceStyle: 'display:inline-flex;align-items:center;gap:4px;min-height:36px;padding:0 12px;border-radius:18px;border:0;font:inherit;font-size:13px;cursor:pointer;' + (s.voice ? 'background:#2F3C2A;color:#fff' : 'background:rgba(255,255,255,.7);color:#2F3C2A'),
-      tMusic: () => this.setState({ music: !s.music }), tVoice: () => { if (s.voice) this.stopAudio(); this.setState({ voice: !s.voice }); },
+      tMusic: () => { if (window.XB && s.on) XB.music(!s.music, .55); this.setState({ music: !s.music }); }, tVoice: () => { if (s.voice) this.stopAudio(); this.setState({ voice: !s.voice }); },
       toggle: () => {
-        if (on) { clearInterval(this.iv); this.stopAudio(); this.setState({ on: false }); return; }
-        this.audio(); this.setState({ on: true, t: 0 }); this.beat(0);
+        if (on) { clearInterval(this.iv); this.stopAudio(); if (window.XB) XB.music(false); this.setState({ on: false }); return; }
+        this.audio(); if (window.XB && this.state.music) XB.music(true, .55); this.setState({ on: true, t: 0 }); this.beat(0);
         clearInterval(this.iv);
         this.iv = setInterval(() => {
           const t = this.state.t + 1, done = t % 7 === 0;
