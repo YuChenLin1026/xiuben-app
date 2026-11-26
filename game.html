@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#BFD8E6">
+<title>岫本・小岫呼吸飛行</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@700&display=swap">
+<style>
+:root{--ink:#1F1D1A;--green:#4F6644;--deep:#2F3C2A;--paper:#F4F1EB;--muted:#5E584F}
+html,body{margin:0;height:100%;overflow:hidden;background:#BFD8E6;color:var(--ink);font-family:-apple-system,"SF Pro Text","Noto Sans TC",sans-serif;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none;touch-action:none}
+canvas{position:fixed;inset:0;width:100%;height:100%;display:block}
+.panel{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:calc(env(safe-area-inset-top) + 24px) 20px calc(env(safe-area-inset-bottom) + 24px);box-sizing:border-box;background:linear-gradient(180deg,rgba(191,216,230,.97),rgba(228,238,224,.97) 60%,rgba(244,241,235,.98));text-align:center;overflow-y:auto}
+.panel[hidden]{display:none}
+h1{font-family:"Noto Serif TC",serif;font-size:30px;margin:8px 0 6px;letter-spacing:.08em}
+p{margin:0;font-size:15px;line-height:1.7;color:var(--muted)}
+.card{width:100%;max-width:360px;margin-top:16px;padding:14px;border-radius:20px;background:rgba(255,255,255,.85);box-sizing:border-box;text-align:left}
+.card b{display:block;font-size:14px;margin-bottom:8px}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.seg button{min-height:52px;border-radius:14px;border:2px solid transparent;background:#F3EFE7;font:inherit;font-size:15px;color:var(--ink);cursor:pointer;line-height:1.3}
+.seg button small{display:block;font-size:11.5px;color:var(--muted)}
+.seg button[aria-pressed=true]{border-color:var(--green);background:#fff;font-weight:600}
+.go{margin-top:18px;width:100%;max-width:360px;min-height:58px;border:0;border-radius:29px;background:var(--green);color:#fff;font:inherit;font-size:18px;font-weight:600;cursor:pointer}
+.go.ghost{background:none;color:var(--green);min-height:46px;margin-top:6px;font-weight:500;font-size:15px}
+.go:active{transform:scale(.97)}
+.back{position:fixed;left:12px;top:calc(env(safe-area-inset-top) + 10px);z-index:5;display:grid;place-items:center;width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.75);color:var(--ink);text-decoration:none;font-size:22px}
+#hint{position:fixed;left:0;right:0;bottom:calc(env(safe-area-inset-bottom) + 18px);text-align:center;font-size:13px;color:var(--deep);opacity:.8;pointer-events:none}
+.big{font-family:"Noto Serif TC",serif;font-size:26px;line-height:1.5;color:var(--deep);margin:6px 0 10px}
+.stat{display:flex;gap:10px;justify-content:center;margin-top:14px}
+.stat div{min-width:96px;padding:10px 12px;border-radius:16px;background:#fff}
+.stat b{display:block;font-family:"Noto Serif TC",serif;font-size:26px;color:var(--green)}
+.stat span{font-size:12px;color:var(--muted)}
+#calWrap{position:relative;width:240px;height:180px;margin:14px auto 0;border-radius:18px;overflow:hidden;background:#000}
+#calWrap video{width:100%;height:100%;object-fit:cover;transform:scaleX(-1)}
+#calBox{position:absolute;left:20%;right:20%;top:15%;bottom:5%;border:3px dashed rgba(255,255,255,.85);border-radius:14px}
+#calRing{width:120px;height:120px;margin:16px auto 0;border-radius:50%;background:radial-gradient(circle,#fff 30%,#DCEBD3 70%);transform:scale(.6);box-shadow:0 10px 30px rgba(79,102,68,.25)}
+#calMeter{height:10px;width:240px;margin:12px auto 0;border-radius:5px;background:#E4DDD1;overflow:hidden}
+#calMeter i{display:block;height:100%;width:0;background:var(--green);transition:width .1s}
+</style>
+</head>
+<body>
+<canvas id="cv" aria-label="小岫呼吸飛行遊戲畫面"></canvas>
+<a class="back" href="Breathe.html" aria-label="回 APP">‹</a>
+<div id="hint" hidden></div>
+
+<section class="panel" id="pStart">
+  <svg width="150" height="94" viewBox="0 0 240 150" aria-hidden="true"><path d="M52 140c-26 0-46-18-46-40 0-21 17-38 39-40 6-30 32-52 64-52 28 0 52 17 61 41 4-1 8-1 12-1 28 0 52 22 52 50s-24 42-52 42z" fill="#fff"/><circle cx="96" cy="92" r="6" fill="#2F3C2A"/><circle cx="146" cy="92" r="6" fill="#2F3C2A"/><path d="M108 108q13 12 26 0" fill="none" stroke="#2F3C2A" stroke-width="4" stroke-linecap="round"/><circle cx="80" cy="110" r="9" fill="#F6C9C0"/><circle cx="162" cy="110" r="9" fill="#F6C9C0"/></svg>
+  <h1>小岫飛行</h1>
+  <p>吸氣，小岫往上飛；吐氣，小岫慢慢降落。<br>躲開山和雲，把星星收集起來。</p>
+  <div class="card"><b>誰要玩？</b><div class="seg" id="segWho">
+    <button aria-pressed="true" data-v="kid">孩子<small>節奏比較短</small></button>
+    <button aria-pressed="false" data-v="adult">大人<small>節奏比較長</small></button></div></div>
+  <div class="card"><b>怎麼操作？</b><div class="seg" id="segIn">
+    <button aria-pressed="true" data-v="cam">鏡頭看呼吸<small>對著胸口和肩膀</small></button>
+    <button aria-pressed="false" data-v="touch">按住螢幕<small>按住＝吸，放開＝吐</small></button></div></div>
+  <button class="go" id="btnStart">開始</button>
+</section>
+
+<section class="panel" id="pCal" hidden>
+  <h1>先讓鏡頭認識你</h1>
+  <p id="calTxt">把手機立好，讓肩膀和胸口在虛線框裡。<br>跟著圓圈，大大地吸、慢慢地吐，三次。</p>
+  <div id="calWrap"><video id="vid" playsinline muted autoplay></video><div id="calBox"></div></div>
+  <div id="calRing"></div>
+  <div id="calMeter" aria-hidden="true"><i></i></div>
+  <button class="go ghost" id="btnTouch">鏡頭不好用？改成按住螢幕</button>
+</section>
+
+<section class="panel" id="pEnd" hidden>
+  <svg width="120" height="76" viewBox="0 0 240 150" aria-hidden="true"><path d="M52 140c-26 0-46-18-46-40 0-21 17-38 39-40 6-30 32-52 64-52 28 0 52 17 61 41 4-1 8-1 12-1 28 0 52 22 52 50s-24 42-52 42z" fill="#fff"/><path d="M86 94q10-10 20 0M136 94q10-10 20 0" fill="none" stroke="#2F3C2A" stroke-width="5" stroke-linecap="round"/><path d="M104 108q17 16 34 0" fill="none" stroke="#2F3C2A" stroke-width="5" stroke-linecap="round"/><circle cx="80" cy="110" r="9" fill="#F6C9C0"/><circle cx="162" cy="110" r="9" fill="#F6C9C0"/></svg>
+  <p>小岫飛完了！告訴你一個秘密⋯</p>
+  <div class="big" id="endBig">其實你剛剛照霧化最適合的節奏<br>呼吸了 10 次</div>
+  <p id="endSub"></p>
+  <div class="stat"><div><b id="stStar">0</b><span>收集的星星</span></div><div><b id="stFit">0%</b><span>跟上節奏</span></div></div>
+  <button class="go" id="btnAgain">再飛一次</button>
+  <a class="go ghost" href="Breathe.html" style="display:grid;place-items:center;text-decoration:none">回 APP</a>
+</section>
+
+<script>
+(() => {
+// ---------- settings ----------
+const RHY = { kid: { inh: 2.5, hold: .5, exh: 3, gap: .25, label: '吸 2.5 秒、停 0.5 秒、吐 3 秒' },
+              adult: { inh: 3, hold: 1, exh: 4, gap: .22, label: '吸 3 秒、停 1 秒、吐 4 秒' } };
+const BREATHS = 10, PRELUDE = 3.5;
+let who = 'kid', mode = 'cam';
+const $ = id => document.getElementById(id);
+const cv = $('cv'), cx = cv.getContext('2d');
+let W = 0, H = 0, DPR = 1;
+function resize() { DPR = Math.min(2, devicePixelRatio || 1); W = innerWidth; H = innerHeight; cv.width = W * DPR; cv.height = H * DPR; cx.setTransform(DPR, 0, 0, DPR, 0, 0); }
+addEventListener('resize', resize); resize();
+
+function seg(id, set) { $(id).addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; [...$(id).children].forEach(x => x.setAttribute('aria-pressed', x === b)); set(b.dataset.v); }); }
+seg('segWho', v => who = v); seg('segIn', v => mode = v);
+
+// ---------- sound (generated files; silent if missing) ----------
+let ac = null; const buf = {};
+function audioInit() {
+  if (ac) { ac.resume && ac.resume(); return; }
+  const A = window.AudioContext || window.webkitAudioContext; if (!A) return; ac = new A();
+  ['sounds/bgm', 'sounds/star', 'sounds/pop', 'sounds/win', 'voice/in', 'voice/out', 'voice/s6'].forEach(k =>
+    fetch(k + '.mp3').then(r => r.ok ? r.arrayBuffer() : Promise.reject()).then(a => new Promise((ok, no) => ac.decodeAudioData(a, ok, no))).then(b => buf[k] = b).catch(() => {}));
+}
+let bgm = null;
+function play(k, vol = 1, loop = false) {
+  if (!ac || !buf[k]) return null; const s = ac.createBufferSource(), g = ac.createGain();
+  s.buffer = buf[k]; s.loop = loop; g.gain.value = vol; s.connect(g); g.connect(ac.destination); s.start(); return { s, g };
+}
+function startBgm() { stopBgm(); const t = () => { if (buf['sounds/bgm']) bgm = play('sounds/bgm', .45, true); else if (running) setTimeout(t, 500); }; t(); }
+function stopBgm() { try { bgm && bgm.s.stop(); } catch (e) {} bgm = null; }
+
+// ---------- breathing target ----------
+const R = () => RHY[who];
+const period = () => R().inh + R().hold + R().exh;
+const ease = x => x < 0 ? 0 : x > 1 ? 1 : x * x * (3 - 2 * x);
+function target(t) { // 0 = ground, 1 = top
+  if (t < 0) return 0; const r = R(), p = period(); if (t >= BREATHS * p) return 0;
+  const u = t % p; if (u < r.inh) return ease(u / r.inh); if (u < r.inh + r.hold) return 1; return 1 - ease((u - r.inh - r.hold) / r.exh);
+}
+function phase(t) { if (t < 0) return 'ready'; const r = R(), u = t % period(); return u < r.inh ? 'in' : u < r.inh + r.hold ? 'hold' : 'out'; }
+
+// ---------- camera breathing sensor ----------
+const vid = $('vid'); let stream = null; const small = document.createElement('canvas'); small.width = 96; small.height = 128;
+const sx = small.getContext('2d', { willReadFrequently: true });
+let ref = null, sig = 0, sigF = 0, lo = 0, hi = 1, camOk = false, sgn = 1;
+function profile() {
+  if (!vid.videoWidth) return null;
+  const vw = vid.videoWidth, vh = vid.videoHeight; // ROI: centre 60% width, 15%..95% height
+  sx.drawImage(vid, vw * .2, vh * .15, vw * .6, vh * .8, 0, 0, 96, 128);
+  const d = sx.getImageData(0, 0, 96, 128).data, p = new Float32Array(128);
+  for (let y = 0; y < 128; y++) { let s = 0; for (let x = 0; x < 96; x++) { const i = (y * 96 + x) * 4; s += d[i] * .3 + d[i + 1] * .59 + d[i + 2] * .11; } p[y] = s / 96; }
+  const g = new Float32Array(127); for (let y = 0; y < 127; y++) g[y] = p[y + 1] - p[y];
+  return g;
+}
+function shiftOf(g) { // vertical shift of g against ref (px, + = moved up)
+  let best = 0, bv = 1e18; const S = 14, err = new Float32Array(2 * S + 1);
+  for (let s = -S; s <= S; s++) { let e = 0; for (let y = S; y < 127 - S; y++) { const q = g[y + s] - ref[y]; e += q * q; } err[s + S] = e; if (e < bv) { bv = e; best = s; } }
+  let frac = 0; const i = best + S; if (i > 0 && i < 2 * S) { const a = err[i - 1], b = err[i], c = err[i + 1], den = a - 2 * b + c; if (den > 0) frac = .5 * (a - c) / den; }
+  return best + frac;
+}
+function sense() {
+  const g = profile(); if (!g) return;
+  if (!ref) { ref = g; return; }
+  const s = sgn * shiftOf(g); sig = s; sigF += (sig - sigF) * .25;
+  for (let y = 0; y < 127; y++) ref[y] += (g[y] - ref[y]) * .0015; // follows slow posture changes only
+}
+function camLevel() { // adaptive min/max
+  if (sigF < lo) lo = sigF; else lo += (sigF - lo) * .0015;
+  if (sigF > hi) hi = sigF; else hi += (sigF - hi) * .0015;
+  const span = Math.max(.8, hi - lo); return Math.max(0, Math.min(1, (sigF - lo) / span));
+}
+async function openCam() {
+  stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user', width: { ideal: 640 }, height: { ideal: 480 } }, audio: false });
+  vid.srcObject = stream; await vid.play().catch(() => {});
+}
+function closeCam() { if (stream) stream.getTracks().forEach(t => t.stop()); stream = null; }
+
+// calibration: 3 guided breaths, measures how far the chest/shoulders move
+let calRun = false;
+async function calibrate() {
+  show('pCal'); $('calTxt').innerHTML = '把手機立好，讓肩膀和胸口在虛線框裡。<br>跟著圓圈，大大地吸、慢慢地吐，三次。';
+  try { await openCam(); } catch (e) { $('calTxt').textContent = '沒有拿到鏡頭權限，先改成按住螢幕玩。'; setTimeout(() => { mode = 'touch'; startGame(); }, 1800); return; }
+  ref = null; sigF = 0; sgn = 1; let mn = 1e9, mx = -1e9; const pairs = []; const t0 = performance.now(), dur = 3 * period() * 1000 + 1500; calRun = true;
+  const step = () => {
+    if (!calRun) return;
+    sense(); const t = (performance.now() - t0 - 1500) / 1000, lv = target(t);
+    $('calRing').style.transform = 'scale(' + (.6 + .5 * lv) + ')';
+    if (t > 0) { mn = Math.min(mn, sigF); mx = Math.max(mx, sigF); pairs.push([lv, sigF]); }
+    $('calMeter').firstChild.style.width = Math.min(100, Math.abs(sigF - (mn < 1e8 ? mn : 0)) / 4 * 100) + '%';
+    if (performance.now() - t0 < dur) return requestAnimationFrame(step);
+    calRun = false;
+    // which way does this person's chest move on the screen? correlate with the guide circle
+    const n = pairs.length, ma = pairs.reduce((a, q) => a + q[0], 0) / n, mb = pairs.reduce((a, q) => a + q[1], 0) / n;
+    let sab = 0, saa = 0, sbb = 0; pairs.forEach(([a, b]) => { sab += (a - ma) * (b - mb); saa += (a - ma) ** 2; sbb += (b - mb) ** 2; });
+    const corr = sab / Math.sqrt(saa * sbb || 1);
+    if (mx - mn < .7 || Math.abs(corr) < .3) { $('calTxt').innerHTML = '鏡頭看不太出你的呼吸。<br>手機放穩、靠近一點，或改成按住螢幕。'; setTimeout(() => { if (!$('pCal').hidden) calibrate(); }, 3500); return; }
+    if (corr < 0) { sgn = -1; sigF = -sigF; [mn, mx] = [-mx, -mn]; }
+    lo = mn; hi = mx; camOk = true; startGame();
+  };
+  requestAnimationFrame(step);
+}
+$('btnTouch').onclick = () => { calRun = false; closeCam(); mode = 'touch'; startGame(); };
+
+// ---------- touch input ----------
+let holding = false;
+const down = e => { if (!running) return; holding = true; e.preventDefault(); };
+const up = () => holding = false;
+cv.addEventListener('pointerdown', down); addEventListener('pointerup', up); addEventListener('pointercancel', up);
+addEventListener('keydown', e => { if (e.code === 'Space') { holding = true; e.preventDefault(); } });
+addEventListener('keyup', e => { if (e.code === 'Space') holding = false; });
+
+// ---------- game ----------
+let running = false, T = 0, last = 0, lvl = 0, inside = 0, total = 0, stars = 0, starTaken = [], bump = 0, popGap = 0, said = '', puffs = [], sparks = [], endAt = 0;
+const cloud = new Path2D('M52 140c-26 0-46-18-46-40 0-21 17-38 39-40 6-30 32-52 64-52 28 0 52 17 61 41 4-1 8-1 12-1 28 0 52 22 52 50s-24 42-52 42z');
+function show(id) { ['pStart', 'pCal', 'pEnd'].forEach(p => $(p).hidden = p !== id); }
+$('btnStart').onclick = () => { audioInit(); if (mode === 'cam') calibrate(); else startGame(); };
+$('btnAgain').onclick = () => { audioInit(); if (mode === 'cam' && stream) startGame(); else if (mode === 'cam') calibrate(); else startGame(); };
+function startGame() {
+  show(null); running = true; T = -PRELUDE; last = performance.now(); lvl = 0; inside = total = stars = 0; starTaken = []; bump = 0; said = ''; puffs = []; sparks = [];
+  $('hint').hidden = false; $('hint').textContent = mode === 'cam' ? '鏡頭在看你的呼吸：吸氣飛高，吐氣降落' : '按住螢幕＝吸氣，放開＝吐氣';
+  startBgm(); requestAnimationFrame(loop);
+}
+function finish() {
+  running = false; stopBgm(); $('hint').hidden = true; play('sounds/win', .8);
+  $('stStar').textContent = stars + '/' + BREATHS; $('stFit').textContent = Math.round(inside / Math.max(1e-6, total) * 100) + '%';
+  $('endSub').textContent = '剛剛的山和雲，是照著「' + R().label + '」排的。用岫本霧化時這樣慢慢吸、慢慢吐，霧比較能吸得深、吸得穩。';
+  show('pEnd');
+}
+
+// geometry
+const G = () => { const cw = Math.min(W * .24, H * .17, 150), ch = cw * 150 / 240, top = H * .17, gnd = H * .8; return { cw, ch, top, gnd, span: gnd - top - ch, x0: W * .3, v: Math.max(70, W * .16) }; };
+const yOf = (g, l) => g.gnd - g.ch / 2 - l * g.span;
+
+function loop(now) {
+  if (!running) return;
+  const dt = Math.min(.05, (now - last) / 1000); last = now; T += dt;
+  const r = R(), g = G(), tg = target(T), gap = r.gap;
+  // input
+  if (mode === 'cam' && stream) { sense(); const c = camLevel(); lvl += (c - lvl) * Math.min(1, dt * 8); }
+  else lvl = Math.max(0, Math.min(1, lvl + (holding ? dt / r.inh : -dt / r.exh)));
+  // corridor check
+  if (T >= 0) {
+    total += dt; const off = lvl > tg + gap ? 1 : lvl < tg - gap ? -1 : 0;
+    if (!off) inside += dt; else if (bump <= 0) { bump = .45; if (popGap <= 0) { play('sounds/pop', .5); popGap = 1; } }
+  }
+  bump -= dt; popGap -= dt;
+  // stars sit on the top of each breath
+  const p = period();
+  for (let k = 0; k < BREATHS; k++) { const ts = k * p + r.inh + r.hold / 2; if (!starTaken[k] && T > ts) { starTaken[k] = lvl > 1 - gap - .08 ? 1 : -1; if (starTaken[k] > 0) { stars++; play(stars >= BREATHS ? 'voice/s6' : 'sounds/star', .8); for (let i = 0; i < 10; i++) sparks.push({ x: g.x0, y: yOf(g, lvl), vx: (Math.random() - .5) * 160, vy: (Math.random() - .8) * 160, t: .8 }); } } }
+  // voice cue on the first breaths
+  const ph = phase(T), key = ph + Math.floor(T / p);
+  if (key !== said) { said = key; if (T < 3 * p) { if (ph === 'in') play('voice/in', 1); if (ph === 'out') play('voice/out', 1); } }
+  // mist puffs while breathing out
+  if (ph === 'out' && Math.random() < dt * 6) puffs.push({ x: g.x0 - g.cw * .45, y: yOf(g, lvl) + g.ch * .1, t: 1.2, s: 6 + Math.random() * 6 });
+  draw(g, tg, gap, ph);
+  if (T > BREATHS * p + 1.2) return finish();
+  requestAnimationFrame(loop);
+}
+
+function draw(g, tg, gap, ph) {
+  const sky = cx.createLinearGradient(0, 0, 0, H); sky.addColorStop(0, '#AFCBE0'); sky.addColorStop(.6, '#DCE9DE'); sky.addColorStop(1, '#EEF0E6');
+  cx.fillStyle = sky; cx.fillRect(0, 0, W, H);
+  // far hills (parallax)
+  cx.fillStyle = '#CBDCC0'; cx.beginPath(); cx.moveTo(0, H);
+  for (let x = 0; x <= W + 20; x += 20) cx.lineTo(x, g.gnd - 40 - 26 * Math.sin((x + T * 18) / 90) - 14 * Math.sin((x + T * 18) / 37)); cx.lineTo(W, H); cx.fill();
+  // corridor: mountains (floor) and cloud bank (ceiling) follow the target breathing curve
+  const step = 6, tAt = x => T + (x - g.x0) / g.v;
+  cx.fillStyle = '#9BBA88'; cx.beginPath(); cx.moveTo(-10, H);
+  for (let x = -10; x <= W + 10; x += step) { const c = target(tAt(x)), b = c - gap; cx.lineTo(x, b <= -0.02 ? g.gnd + 4 : yOf(g, b) + g.ch * .45); }
+  cx.lineTo(W + 10, H); cx.fill();
+  cx.fillStyle = '#86A874'; cx.fillRect(0, g.gnd, W, H - g.gnd);
+  // ceiling clouds
+  const ceil = x => { const b = target(tAt(x)) + gap; return b >= 1.02 ? -40 : yOf(g, b) - g.ch * .45 - 14; };
+  const off = (T * g.v) % 28;
+  for (const [col, dy] of [['#D7E3EC', 7], ['#FFFFFF', 0]]) { // soft shadow layer, then white puffs
+    cx.fillStyle = col; cx.beginPath(); cx.moveTo(-10, -10);
+    for (let x = -10; x <= W + 10; x += step) cx.lineTo(x, ceil(x) + dy); cx.lineTo(W + 10, -10); cx.fill();
+    for (let x = -off - 28; x <= W + 28; x += 28) { const y = ceil(x); if (y < -20) continue; const rad = 17 + 5 * Math.sin((x + T * g.v) * .07); cx.beginPath(); cx.arc(x, y + dy, rad, 0, 7); cx.fill(); }
+  }
+  // stars ahead
+  const r = R(), p = period();
+  for (let k = 0; k < BREATHS; k++) { if (starTaken[k]) continue; const ts = k * p + r.inh + r.hold / 2, x = g.x0 + (ts - T) * g.v; if (x < -30 || x > W + 30) continue; starShape(x, yOf(g, 1), 14 + 2 * Math.sin(T * 5), '#F5C46A'); }
+  // path dots (where to fly)
+  cx.fillStyle = 'rgba(79,102,68,.28)'; for (let x = g.x0 + 30; x < W; x += 26) { const t = tAt(x); if (t < 0) continue; cx.beginPath(); cx.arc(x, yOf(g, target(t)), 3, 0, 7); cx.fill(); }
+  // puffs
+  for (const q of puffs) { q.t -= 1 / 60; q.x -= 1.4; q.y -= .3; cx.fillStyle = 'rgba(255,255,255,' + Math.max(0, q.t * .6) + ')'; cx.beginPath(); cx.arc(q.x, q.y, q.s * (1.6 - q.t * .5), 0, 7); cx.fill(); }
+  puffs = puffs.filter(q => q.t > 0);
+  // 小岫
+  const y = yOf(g, lvl), wob = bump > 0 ? Math.sin(bump * 40) * 6 : 0, sc = g.cw / 240 * (1 + (ph === 'in' ? .06 * target(T) : 0));
+  cx.save(); cx.translate(g.x0 + wob, y); cx.rotate(bump > 0 ? Math.sin(bump * 30) * .08 : (ph === 'in' ? -.05 : ph === 'out' ? .05 : 0)); cx.scale(sc, sc); cx.translate(-120, -75);
+  cx.shadowColor = 'rgba(60,80,60,.22)'; cx.shadowBlur = 18; cx.shadowOffsetY = 10; cx.fillStyle = '#fff'; cx.fill(cloud); cx.shadowColor = 'transparent';
+  cx.fillStyle = '#F6C9C0'; dot(80, 110, 9); dot(162, 110, 9); cx.fillStyle = '#2F3C2A'; cx.strokeStyle = '#2F3C2A'; cx.lineWidth = 5; cx.lineCap = 'round';
+  if (bump > 0) { line([[88, 86], [102, 94], [88, 102]]); line([[154, 86], [140, 94], [154, 102]]); dot(121, 114, 6); }
+  else if (ph === 'in') { line([[88, 94], [96, 86], [104, 94]]); line([[138, 94], [146, 86], [154, 94]]); dot(121, 113, 5); }
+  else if (ph === 'out') { dot(96, 92, 6); dot(146, 92, 6); cx.beginPath(); cx.ellipse(121, 114, 8, 10, 0, 0, 7); cx.fill(); }
+  else { dot(96, 92, 6); dot(146, 92, 6); cx.beginPath(); cx.moveTo(108, 108); cx.quadraticCurveTo(121, 120, 134, 108); cx.stroke(); }
+  cx.restore();
+  // sparks
+  for (const s of sparks) { s.t -= 1 / 60; s.x += s.vx / 60; s.y += s.vy / 60; s.vy += 4; starShape(s.x, s.y, 6 * Math.max(0, s.t), '#F5C46A'); }
+  sparks = sparks.filter(s => s.t > 0);
+  // HUD: cue bubble + breath dots + camera preview
+  const cue = T < 0 ? (T < -2.3 ? '準備' : T < -1.2 ? '2' : '1') : ph === 'in' ? '吸～' : ph === 'hold' ? '停一下' : '吐～';
+  cx.font = '700 22px "Noto Serif TC",serif'; const tw = cx.measureText(cue).width + 36, top = Math.max(16, (window.visualViewport ? 0 : 0) + 18);
+  cx.fillStyle = 'rgba(255,255,255,.92)'; rr(W / 2 - tw / 2, top + 4, tw, 44, 22); cx.fill(); cx.fillStyle = '#2F3C2A'; cx.textAlign = 'center'; cx.textBaseline = 'middle'; cx.fillText(cue, W / 2, top + 27);
+  const n = Math.max(0, Math.min(BREATHS, Math.floor(Math.max(0, T) / p))); for (let i = 0; i < BREATHS; i++) { cx.fillStyle = i < n ? (starTaken[i] > 0 ? '#F5C46A' : '#8FA882') : 'rgba(255,255,255,.7)'; dot(W / 2 - (BREATHS - 1) * 9 + i * 18, top + 64, 5); }
+  if (mode === 'cam' && stream && vid.videoWidth) {
+    const pw = Math.min(110, W * .26), phh = pw * 4 / 3, px = W - pw - 12, py = top + 4;
+    cx.save(); rr(px, py, pw, phh, 14); cx.clip(); cx.translate(px + pw, py); cx.scale(-1, 1);
+    const vr = vid.videoWidth / vid.videoHeight, dw = phh * vr; cx.drawImage(vid, (pw - dw) / 2, 0, dw, phh); cx.restore();
+    cx.strokeStyle = 'rgba(255,255,255,.9)'; cx.lineWidth = 2; rr(px, py, pw, phh, 14); cx.stroke();
+    cx.fillStyle = 'rgba(255,255,255,.8)'; rr(px, py + phh + 6, pw, 8, 4); cx.fill(); cx.fillStyle = '#4F6644'; rr(px, py + phh + 6, pw * lvl, 8, 4); cx.fill();
+  }
+}
+function dot(x, y, r) { cx.beginPath(); cx.arc(x, y, r, 0, 7); cx.fill(); }
+function line(pts) { cx.beginPath(); pts.forEach((p, i) => i ? cx.lineTo(p[0], p[1]) : cx.moveTo(p[0], p[1])); cx.stroke(); }
+function rr(x, y, w, h, r) { cx.beginPath(); cx.moveTo(x + r, y); cx.arcTo(x + w, y, x + w, y + h, r); cx.arcTo(x + w, y + h, x, y + h, r); cx.arcTo(x, y + h, x, y, r); cx.arcTo(x, y, x + w, y, r); cx.closePath(); }
+function starShape(x, y, r, c) { if (r <= 0) return; cx.fillStyle = c; cx.beginPath(); for (let i = 0; i < 10; i++) { const a = -Math.PI / 2 + i * Math.PI / 5, rad = i % 2 ? r * .45 : r; cx.lineTo(x + rad * Math.cos(a), y + rad * Math.sin(a)); } cx.closePath(); cx.fill(); }
+
+// idle background behind the start panel
+(function idle() { if (!running && $('pStart') && !$('pStart').hidden) { T += 1 / 60; draw(G(), 0, R().gap, 'ready'); } requestAnimationFrame(idle); })();
+window.__game = { get state() { return { running, T, lvl, inside, total, stars, mode, who }; }, set hold(v) { holding = v; }, fast(k) { T = k; } };
+})();
+</script>
+</body>
+</html>

@@ -59,7 +59,9 @@ a{color:#2F3C2A}a:hover{color:#1F1D1A}
 <div style="position: relative; display: flex; align-items: center; justify-content: space-between">
 <a class="btn" href="Session.html" style="display: inline-flex; align-items: center; gap: 2px; min-height: 44px; font-size: 17px; text-decoration: none"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 5-7 7 7 7"/></svg>回計時</a>
 <div style="display: flex; gap: 6px">
+<a class="tg" href="game.html" style="display:inline-flex;align-items:center;min-height:36px;padding:0 12px;border-radius:18px;background:#4F6644;color:#fff;font-size:13px;text-decoration:none">飛行遊戲</a>
 <button class="tg" onClick="{{ tMusic }}" aria-pressed="{{ musicOn }}" style="{{ musicStyle }}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/></svg>音樂</button>
+<button class="tg" onClick="{{ tVoice }}" aria-pressed="{{ voiceOn }}" style="{{ voiceStyle }}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16 9a4 4 0 0 1 0 6"/></svg>語音</button>
 </div>
 </div>
 <p style="position: relative; margin: 6px 0 0; text-align: center; font-size: 13px; letter-spacing: 0.2em; color: #3E5560">小岫呼吸劇場・第 {{ ep }} 回</p>
@@ -93,10 +95,18 @@ class Component extends DCLogic {
   constructor(p){ super(p); this.state = { on: false, t: 0, n: 0, music: true, voice: true }; }
   componentWillUnmount(){ clearInterval(this.iv); this.stopAudio(); }
   audio(){ if (!this.ac) { const A = window.AudioContext || window.webkitAudioContext; if (!A) return null; this.ac = new A(); this.out = this.ac.createGain(); this.out.gain.value = .5; this.out.connect(this.ac.destination); } if (this.ac.state === 'suspended') this.ac.resume(); return this.ac; }
-  stopAudio(){ try { window.speechSynthesis && speechSynthesis.cancel(); } catch (e) {} }
+  stopAudio(){ try { if (this.vsrc) this.vsrc.stop(); } catch (e) {} }
   tone(f, when, dur, vol, type){ const ac = this.ac; if (!ac) return; const o = ac.createOscillator(), g = ac.createGain(); o.type = type || 'triangle'; o.frequency.value = f; const t0 = ac.currentTime + when; g.gain.setValueAtTime(0, t0); g.gain.linearRampToValueAtTime(vol, t0 + .02); g.gain.exponentialRampToValueAtTime(.0005, t0 + dur); o.connect(g); g.connect(this.out); o.start(t0); o.stop(t0 + dur + .05); }
   pad(root){ const ac = this.ac; if (!ac) return; [1, 1.5, 2].forEach((m, i) => { const o = ac.createOscillator(), g = ac.createGain(), f = ac.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = 900; o.type = 'sawtooth'; o.frequency.value = root * m; o.detune.value = i * 6 - 6; const t0 = ac.currentTime; g.gain.setValueAtTime(0, t0); g.gain.linearRampToValueAtTime(.022, t0 + 1.5); g.gain.linearRampToValueAtTime(.0001, t0 + 7); o.connect(f); f.connect(g); g.connect(this.out); o.start(t0); o.stop(t0 + 7.1); }); }
-  say(txt){}
+  say(txt){
+    if (!this.state.voice || !this.ac) return;
+    const m = { '跟小岫一起，慢慢吸～': 'in', '慢慢吐～': 'out', '六顆星都拿到了，你好棒！': 's6' }, d = /第(\d)顆星/.exec(txt);
+    const k = m[txt] || (d ? 's' + d[1] : null); if (!k) return;
+    this.vb = this.vb || {};
+    const play = b => { try { if (this.vsrc) this.vsrc.stop(); } catch (e) {} const src = this.ac.createBufferSource(), g = this.ac.createGain(); g.gain.value = 1.6; src.buffer = b; src.connect(g); g.connect(this.ac.destination); src.start(); this.vsrc = src; };
+    if (this.vb[k]) return play(this.vb[k]);
+    fetch('voice/' + k + '.mp3').then(r => r.ok ? r.arrayBuffer() : Promise.reject()).then(a => new Promise((ok, no) => this.ac.decodeAudioData(a, ok, no))).then(b => { this.vb[k] = b; play(b); }).catch(() => {});
+  }
   beat(t){
     const ph = t % 7, round = Math.floor(t / 7), m = this.state.music;
     const roots = [130.81, 110, 87.31, 98];
