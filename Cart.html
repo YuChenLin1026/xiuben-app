@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#F4F1EB">
+<title>岫本・購物車與結帳</title>
+<style>html,body{margin:0;height:100%;overflow:hidden;background:#1F1D1A;-webkit-tap-highlight-color:transparent}#screen{position:fixed;left:0;top:0;width:390px;height:844px;transform-origin:0 0;overflow:hidden}</style>
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&amp;family=Noto+Serif+TC:wght@500;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#4F6644}a:hover{color:#3B4D33}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes sheet{from{transform:translateY(100%)}to{transform:none}}
+@keyframes pop{0%{transform:scale(0)}70%{transform:scale(1.15)}100%{transform:scale(1)}}
+@keyframes draw{from{stroke-dashoffset:40}to{stroke-dashoffset:0}}
+@keyframes spin{to{transform:rotate(360deg)}}
+.r1{animation:rise .5s both}.r2{animation:rise .5s .08s both}.r3{animation:rise .5s .16s both}
+.sh{animation:sheet .45s cubic-bezier(.2,.9,.25,1) both}
+.ok{animation:pop .5s cubic-bezier(.2,.8,.2,1) both}.tk{stroke-dasharray:40;animation:draw .45s .3s ease-out both}
+.sp{animation:spin .9s linear infinite}
+.pay{transition:transform .15s}.pay:active{transform:scale(.97)}
+.cp{transition:background .25s,border-color .25s}
+</style>
+
+<script src="dc.js"></script>
+</head><body>
+<template id="tpl">
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; box-sizing: border-box; background: #F4F1EB; color: #1F1D1A; font-family: -apple-system, 'SF Pro Text', 'Noto Sans TC', sans-serif; padding: 62px 20px 0">
+<a href="Shop.html" style="display: inline-flex; align-items: center; gap: 2px; min-height: 44px; font-size: 17px; text-decoration: none"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 5-7 7 7 7"/></svg>商店</a>
+<h1 class="r1" style="margin: 4px 0 0; font-family: 'Noto Serif TC', serif; font-weight: 700; font-size: 30px">購物車</h1>
+<div class="r2" style="margin-top: 14px; background: #fff; border-radius: 18px; overflow: hidden">
+<sc-for list="{{ lines }}" as="l" hint-placeholder-count="2">
+<div style="display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-bottom: 1px solid #EFE9DF">
+<img src="{{ l.img }}" alt="" style="width: 56px; height: 44px; object-fit: contain">
+<span style="flex: 1"><b style="display: block; font-size: 15px; font-weight: 600">{{ l.name }}</b><span style="font-size: 12.5px; color: #6E685E">{{ l.sub }}</span></span>
+<div role="group" aria-label="{{ l.qa }}" style="display: flex; align-items: center; border-radius: 16px; background: #F4F1EB">
+<button onClick="{{ l.dec }}" aria-label="減少" style="width: 34px; height: 34px; border: 0; background: none; font: inherit; font-size: 17px; cursor: pointer; color: #1F1D1A">−</button><b style="min-width: 14px; text-align: center; font-size: 14px">{{ l.q }}</b><button onClick="{{ l.inc }}" aria-label="增加" style="width: 34px; height: 34px; border: 0; background: none; font: inherit; font-size: 17px; cursor: pointer; color: #1F1D1A">+</button>
+</div>
+</div>
+</sc-for>
+</div>
+<button class="cp r3" onClick="{{ toggleCoupon }}" aria-pressed="{{ cpOn }}" style="{{ cpStyle }}">
+<span style="display: grid; place-items: center; width: 36px; height: 36px; border-radius: 10px; background: #F1E6D6; color: #6B4E25; font-family: 'Noto Serif TC', serif; font-weight: 700">折</span>
+<span style="flex: 1; text-align: left"><b style="display: block; font-size: 14.5px; font-weight: 600">藥瓶 9 折券</b><span style="font-size: 12px; color: #6E685E">用雲點換的，只折藥瓶</span></span>
+<span style="font-size: 13px; font-weight: 600; color: {{ cpColor }}">{{ cpLabel }}</span>
+</button>
+<div class="r3" style="margin-top: 12px; padding: 14px 16px; border-radius: 18px; background: #fff; font-size: 14px; display: flex; flex-direction: column; gap: 8px">
+<div style="display: flex; justify-content: space-between"><span style="color: #6E685E">小計</span><span>{{ sub }}</span></div>
+<div style="display: flex; justify-content: space-between"><span style="color: #6E685E">折扣</span><span style="color: #3B4D33">{{ disc }}</span></div>
+<div style="display: flex; justify-content: space-between"><span style="color: #6E685E">運費</span><span>{{ ship }}</span></div>
+<div style="display: flex; justify-content: space-between; padding-top: 8px; border-top: 1px solid #EFE9DF; font-size: 17px"><b>合計</b><b>{{ total }}</b></div>
+</div>
+<p class="r3" style="margin: 10px 4px 0; font-size: 12px; color: #6E685E">滿 NT$1,000 免運。價格暫定。</p>
+<button class="pay" onClick="{{ pay }}" style="position: absolute; left: 20px; right: 20px; bottom: 44px; min-height: 56px; border: 0; border-radius: 28px; background: #1F1D1A; color: #fff; font: inherit; font-size: 17px; font-weight: 500; cursor: pointer">結帳・{{ total }}</button>
+<sc-if value="{{ sheet }}" hint-placeholder-val="{{ false }}">
+<div style="position: absolute; inset: 0; background: rgba(31,29,26,.4)"></div>
+<div class="sh" style="position: absolute; left: 8px; right: 8px; bottom: 8px; padding: 22px 20px 24px; border-radius: 30px; background: #fff">
+<sc-if value="{{ paying }}" hint-placeholder-val="{{ true }}">
+<div style="display: flex; flex-direction: column; align-items: center; gap: 14px; padding: 18px 0">
+<svg class="sp" width="36" height="36" viewBox="0 0 36 36" aria-hidden="true"><circle cx="18" cy="18" r="15" fill="none" stroke="#E4DDD1" stroke-width="3"/><path d="M18 3a15 15 0 0 1 15 15" fill="none" stroke="#1F1D1A" stroke-width="3" stroke-linecap="round"/></svg>
+<b style="font-size: 17px; font-weight: 600">付款中⋯</b><span style="font-size: 13px; color: #6E685E">{{ total }}・確認手機的付款視窗</span>
+</div>
+</sc-if>
+<sc-if value="{{ paid }}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 8px 0">
+<div class="ok" style="display: grid; place-items: center; width: 64px; height: 64px; border-radius: 50%; background: #4F6644"><svg width="32" height="32" viewBox="0 0 24 24" aria-hidden="true"><path class="tk" d="M5 12.5 10 17.5 19 7" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+<b style="font-size: 20px; font-weight: 600">訂單成立</b>
+<span style="font-size: 14px; color: #6E685E; text-align: center; line-height: 1.6">預計 2–3 天到貨。到貨後，掃瓶蓋的 QR code 就能開始用。</span>
+<a href="Home.html" style="display: grid; place-items: center; width: 100%; min-height: 52px; margin-top: 8px; border-radius: 26px; background: #4F6644; color: #fff; font-size: 16px; font-weight: 500; text-decoration: none">回到今天</a>
+</div>
+</sc-if>
+</div>
+</sc-if>
+<div style="position: absolute; left: 50%; bottom: 8px; width: 134px; height: 5px; margin-left: -67px; border-radius: 3px; background: #1F1D1A"></div>
+</div>
+</template>
+<div id="screen"></div>
+<script>
+
+class Component extends DCLogic {
+  constructor(p){ super(p); this.state = { q: [1, 1], cp: true, st: 0 }; }
+  componentWillUnmount(){ clearTimeout(this.t); }
+  renderVals() {
+    const s = this.state, fmt = n => 'NT$' + n.toLocaleString('en-US');
+    const L = [['四瓶綜合盒', '單次購買', 880, 'img/box.webp'], ['清嵐補充瓶', '一瓶', 240, 'img/bottle1.webp']];
+    const sub = L.reduce((a, l, i) => a + l[2] * s.q[i], 0), disc = s.cp ? Math.round(sub * 0.1) : 0, ship = sub - disc >= 1000 || sub === 0 ? 0 : 80, total = sub - disc + ship;
+    const setQ = (i, d) => { const q = s.q.slice(); q[i] = Math.max(0, Math.min(9, q[i] + d)); this.setState({ q }); };
+    return {
+      lines: L.map((l, i) => ({ name: l[0], sub: l[1] + '・' + fmt(l[2]), img: l[3], q: s.q[i], qa: l[0] + ' 數量', inc: () => setQ(i, 1), dec: () => setQ(i, -1) })),
+      sub: fmt(sub), disc: disc ? '−' + fmt(disc) : 'NT$0', ship: ship ? fmt(ship) : '免運', total: fmt(total),
+      cpOn: s.cp ? 'true' : 'false', cpLabel: s.cp ? '已套用' : '套用', cpColor: s.cp ? '#3B4D33' : '#8A6A3A', toggleCoupon: () => this.setState({ cp: !s.cp }),
+      cpStyle: 'display:flex;align-items:center;gap:12px;width:100%;margin-top:12px;padding:12px 14px;border-radius:18px;font:inherit;color:#1F1D1A;cursor:pointer;border:2px ' + (s.cp ? 'solid #4F6644' : 'dashed #CFC6B6') + ';background:' + (s.cp ? '#F6F9F2' : '#fff'),
+      sheet: s.st > 0, paying: s.st === 1, paid: s.st === 2,
+      pay: () => { this.setState({ st: 1 }); clearTimeout(this.t); this.t = setTimeout(() => this.setState({ st: 2 }), 1600); }
+    };
+  }
+}
+
+dcMount(Component, {});
+</script>
+</body></html>

@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#F4F1EB">
+<title>岫本・全家成就</title>
+<style>html,body{margin:0;height:100%;overflow:hidden;background:#1F1D1A;-webkit-tap-highlight-color:transparent}#screen{position:fixed;left:0;top:0;width:390px;height:844px;transform-origin:0 0;overflow:hidden}</style>
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&amp;family=Noto+Serif+TC:wght@500;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#4F6644}a:hover{color:#3B4D33}
+@keyframes rise{from{opacity:0;transform:translateY(16px) scale(.9)}to{opacity:1;transform:none}}
+@keyframes shine{0%{transform:translateX(-120%) rotate(25deg)}55%,100%{transform:translateX(220%) rotate(25deg)}}
+@keyframes count{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.bd{animation:rise .5s cubic-bezier(.2,.8,.2,1.2) both;transition:transform .2s}.bd:active{transform:scale(.94)}
+.sh{position:absolute;top:-20%;bottom:-20%;width:40%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.55),transparent);animation:shine 3.6s ease-in-out infinite}
+.pt{animation:count .6s .2s both}
+</style>
+
+<script src="dc.js"></script>
+</head><body>
+<template id="tpl">
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; box-sizing: border-box; background: #F4F1EB; color: #1F1D1A; font-family: -apple-system, 'SF Pro Text', 'Noto Sans TC', sans-serif; padding: 62px 20px 0">
+<h1 style="margin: 0; font-family: 'Noto Serif TC', serif; font-weight: 700; font-size: 34px">成就</h1>
+<p style="margin: 4px 0 0; font-size: 14px; color: #6E685E">全家一起累積：我和孩子做到的，都算在同一本。</p>
+<a href="Rewards.html" class="pt" style="display: flex; align-items: center; gap: 12px; margin-top: 14px; padding: 14px 16px; border-radius: 18px; background: #2F3C2A; color: #fff; text-decoration: none">
+<svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#E7CF9D" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M7 17c-2.5 0-4-1.6-4-3.6S4.5 10 7 10c.4-2.6 2.3-4.2 4.8-4.2s4.5 1.6 4.9 4c1.9.3 3.3 1.8 3.3 3.6 0 2-1.6 3.6-3.8 3.6z"/></svg>
+<span style="flex: 1"><span style="display: block; font-size: 12px; opacity: .8">全家的雲點</span><b style="font-family: 'Noto Serif TC', serif; font-size: 26px; font-weight: 700">320</b></span>
+<span style="font-size: 14px; color: #E7CF9D">去兌換 ›</span>
+</a>
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px 8px; margin-top: 18px">
+<sc-for list="{{ badges }}" as="b" hint-placeholder-count="9">
+<a class="bd" href="Badge.html" style="{{ b.wrap }}">
+<span style="position: relative; display: block; width: 92px; height: 92px; border-radius: 50%; overflow: hidden">
+<svg width="92" height="92" viewBox="0 0 92 92" aria-hidden="true">
+<defs><linearGradient id="{{ b.gid }}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="{{ b.g1 }}"/><stop offset=".5" stop-color="{{ b.g2 }}"/><stop offset="1" stop-color="{{ b.g1 }}"/></linearGradient></defs>
+<circle cx="46" cy="46" r="44" fill="url(#{{ b.gid }})"/>
+<circle cx="46" cy="46" r="36" fill="{{ b.enamel }}"/>
+<circle cx="46" cy="46" r="31" fill="none" stroke="{{ b.g2 }}" stroke-width="1" stroke-dasharray="2 3" opacity=".7"/>
+</svg>
+<span aria-hidden="true" style="position: absolute; inset: 0; display: grid; place-items: center; font-family: 'Noto Serif TC', serif; font-size: 30px; font-weight: 700; line-height: 1; color: {{ b.ink }}">{{ b.ch }}</span>
+<sc-if value="{{ b.got }}" hint-placeholder-val="{{ true }}"><span class="sh"></span></sc-if>
+</span>
+<b style="margin-top: 8px; font-size: 13.5px; font-weight: 600">{{ b.name }}</b>
+<span style="font-size: 11.5px; color: #6E685E">{{ b.prog }}</span>
+</a>
+</sc-for>
+</div>
+<nav aria-label="主要分頁" style="position: absolute; left: 0; right: 0; bottom: 0; height: 88px; box-sizing: border-box; padding: 8px 10px 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); background: rgba(244,241,235,.94); border-top: 1px solid #E4DDD1; font-size: 11px">
+<a href="Home.html" style="display: flex; flex-direction: column; align-items: center; gap: 3px; color: #8A8478; text-decoration: none"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 4l9 6.5V20H3z"/><path d="M9.5 20v-5h5v5"/></svg>今天</a>
+<a href="Records.html" style="display: flex; flex-direction: column; align-items: center; gap: 3px; color: #8A8478; text-decoration: none"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><rect x="4" y="4" width="16" height="17" rx="2.5"/><path d="M8 2.5v3M16 2.5v3M4 9.5h16M8 14h4M8 17.5h7"/></svg>紀錄</a>
+<a href="Achieve.html" aria-current="page" style="display: flex; flex-direction: column; align-items: center; gap: 3px; color: #4F6644; text-decoration: none"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="9" r="6"/><path d="m8.5 14 -1.5 7.5 5-2.5 5 2.5-1.5-7.5"/></svg>成就</a>
+<a href="Shop.html" style="display: flex; flex-direction: column; align-items: center; gap: 3px; color: #8A8478; text-decoration: none"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8h14l-1.2 12H6.2z"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8"/></svg>商店</a>
+</nav>
+<div style="position: absolute; left: 50%; bottom: 8px; width: 134px; height: 5px; margin-left: -67px; border-radius: 3px; background: #1F1D1A"></div>
+</div>
+</template>
+<div id="screen"></div>
+<script>
+
+class Component extends DCLogic {
+  renderVals() {
+    const B = [
+      ['岫', '初次出岫', '已獲得', 1, '#3F5A2C'], ['同', '家人同行', '已獲得', 1, '#5A3A2A'], ['雲', '雲朵小達人', '已獲得', 1, '#2E4F5E'],
+      ['七', '七日之雲', '6／7 天', 0, '#3F5A2C'], ['四', '四瓶集齊', '3／4 款', 0, '#6A3D18'], ['淨', '洗得乾淨', '7／10 次', 0, '#2E4F5E'],
+      ['百', '百分鐘', '70／100 分', 0, '#5A3A2A'], ['月', '月見', '9／30 天', 0, '#3B3550'], ['山', '四季常在', '1／4 季', 0, '#3F5A2C']];
+    return { badges: B.map((b, i) => ({ ch: b[0], name: b[1], prog: b[2], got: !!b[3], gid: 'g' + i,
+      g1: b[3] ? '#B89462' : '#CFC8BC', g2: b[3] ? '#F1DDB0' : '#E6E0D6', enamel: b[3] ? b[4] : '#E2DCD1', ink: b[3] ? '#F4E6C6' : '#B5AEA2',
+      wrap: 'display:flex;flex-direction:column;align-items:center;text-decoration:none;color:#1F1D1A;animation-delay:' + (0.05 * i).toFixed(2) + 's' })) };
+  }
+}
+
+dcMount(Component, {});
+</script>
+</body></html>

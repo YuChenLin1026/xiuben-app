@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#F4F1EB">
+<title>岫本・商店</title>
+<style>html,body{margin:0;height:100%;overflow:hidden;background:#1F1D1A;-webkit-tap-highlight-color:transparent}#screen{position:fixed;left:0;top:0;width:390px;height:844px;transform-origin:0 0;overflow:hidden}</style>
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&amp;family=Noto+Serif+TC:wght@500;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#4F6644}a:hover{color:#3B4D33}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes bump{0%{transform:scale(1)}40%{transform:scale(1.35)}100%{transform:scale(1)}}
+@keyframes ok{0%{transform:scale(.5)}70%{transform:scale(1.15)}100%{transform:scale(1)}}
+.r1{animation:rise .5s both}.r2{animation:rise .5s .08s both}.r3{animation:rise .5s .16s both}.r4{animation:rise .5s .24s both}
+.fl{animation:floaty 4.5s ease-in-out infinite}
+.bd.b{animation:bump .45s ease}
+.add{transition:background .25s,transform .15s}.add:active{transform:scale(.9)}
+.ok{animation:ok .35s ease both}
+.cd{transition:transform .2s}.cd:active{transform:scale(.98)}
+</style>
+
+<script src="dc.js"></script>
+</head><body>
+<template id="tpl">
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; box-sizing: border-box; background: #F4F1EB; color: #1F1D1A; font-family: -apple-system, 'SF Pro Text', 'Noto Sans TC', sans-serif; padding: 0">
+<div style="position: absolute; left: 0; right: 0; top: 0; bottom: 88px; overflow-y: auto; box-sizing: border-box; padding: 62px 20px 20px">
+<div class="r1" style="display: flex; align-items: flex-end; justify-content: space-between">
+<h1 style="margin: 0; font-family: 'Noto Serif TC', serif; font-weight: 700; font-size: 34px">商店</h1>
+<a href="Cart.html" aria-label="{{ cartAria }}" style="position: relative; display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: #fff; color: #1F1D1A">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8h14l-1.2 12H6.2z"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8"/></svg>
+<span class="bd {{ bCls }}" style="position: absolute; right: -2px; top: -2px; min-width: 20px; height: 20px; padding: 0 5px; box-sizing: border-box; border-radius: 10px; background: #B4553F; color: #fff; font-size: 12px; font-weight: 700; display: grid; place-items: center">{{ n }}</span>
+</a>
+</div>
+<div class="r1" style="margin-top: 12px; display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 14px; background: #F3E6D2; font-size: 13.5px; color: #5A4220">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v6M12 16.5v.5"/></svg>
+<span style="flex: 1">家裡的清嵐只剩 1 瓶了</span>
+<a href="Single.html" style="font-weight: 600; color: #5A4220; text-decoration: none">補貨</a>
+</div>
+<a class="cd r2" href="Box.html" style="display: block; position: relative; margin-top: 14px; padding: 16px 16px 14px; border-radius: 22px; background: linear-gradient(160deg, #FFFFFF 0%, #EEF2E8 100%); color: #1F1D1A; text-decoration: none; overflow: hidden">
+<span style="font-size: 12px; letter-spacing: 0.2em; color: #8A6A3A">最多人選</span>
+<b style="display: block; margin-top: 2px; font-family: 'Noto Serif TC', serif; font-size: 22px; font-weight: 700">四瓶綜合盒</b>
+<span style="font-size: 13px; color: #6E685E">清嵐・玉容・潤金・棲月 各一瓶</span>
+<img class="fl" src="img/box.webp" alt="四瓶綜合盒，四色藥瓶並排在白色紙盒裡" style="display: block; width: 100%; margin-top: 8px">
+<div style="display: flex; align-items: center; justify-content: space-between; margin-top: 6px">
+<span><b style="font-size: 20px">NT$880</b><span style="margin-left: 6px; font-size: 12px; color: #6E685E">價格暫定</span></span>
+<span style="padding: 8px 16px; border-radius: 18px; background: #4F6644; color: #fff; font-size: 14px">看看</span>
+</div>
+</a>
+<div class="r3" style="display: flex; justify-content: space-between; align-items: baseline; margin-top: 18px"><h2 style="margin: 0; font-size: 17px">單款補充瓶</h2><a href="Single.html" style="font-size: 14px; text-decoration: none">全部</a></div>
+<div class="r3" style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin-top: 10px">
+<sc-for list="{{ singles }}" as="s" hint-placeholder-count="4">
+<div style="display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 10px 4px 8px; border-radius: 16px; background: #fff">
+<img src="{{ s.img }}" alt="{{ s.alt }}" style="width: 58px">
+<b style="font-family: 'Noto Serif TC', serif; font-size: 14px; font-weight: 700">{{ s.name }}</b>
+<span style="font-size: 12px; color: #6E685E">NT$240</span>
+<button class="add" onClick="{{ s.add }}" aria-label="{{ s.aria }}" style="{{ s.btn }}">{{ s.mark }}</button>
+</div>
+</sc-for>
+</div>
+<div class="r4" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-top: 12px">
+<div style="display: flex; align-items: center; gap: 10px; padding: 12px; border-radius: 16px; background: #fff">
+<span style="display: grid; place-items: center; width: 40px; height: 40px; border-radius: 10px; background: #F3EFE7"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#8A6A3A" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M8 3v18M12 3v18M16 3v18"/></svg></span>
+<span><b style="display: block; font-size: 14px; font-weight: 600">棉芯替換包</b><span style="font-size: 12px; color: #6E685E">30 支・NT$180</span></span>
+</div>
+<div style="display: flex; align-items: center; gap: 10px; padding: 12px; border-radius: 16px; background: #fff">
+<img src="img/device.webp" alt="" style="width: 22px">
+<span><b style="display: block; font-size: 14px; font-weight: 600">岫本主機</b><span style="font-size: 12px; color: #6E685E">綠・黑・NT$4,980</span></span>
+</div>
+</div>
+</div>
+<nav aria-label="主要分頁" style="position: absolute; left: 0; right: 0; bottom: 0; height: 88px; box-sizing: border-box; padding: 8px 10px 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); background: rgba(244,241,235,.94); border-top: 1px solid #E4DDD1; font-size: 11px">
+<a href="Home.html" style="display: flex; flex-direction: column; align-items: center; gap: 3px; color: #8A8478; text-decoration: none"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 4l9 6.5V20H3z"/><path d="M9.5 20v-5h5v5"/></svg>今天</a>
+<a href="Records.html" style="display: flex; flex-direction: column; align-items: center; gap: 3px; color: #8A8478; text-decoration: none"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><rect x="4" y="4" width="16" height="17" rx="2.5"/><path d="M8 2.5v3M16 2.5v3M4 9.5h16M8 14h4M8 17.5h7"/></svg>紀錄</a>
+<a href="Achieve.html" style="display: flex; flex-direction: column; align-items: center; gap: 3px; color: #8A8478; text-decoration: none"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="9" r="6"/><path d="m8.5 14 -1.5 7.5 5-2.5 5 2.5-1.5-7.5"/></svg>成就</a>
+<a href="Shop.html" aria-current="page" style="display: flex; flex-direction: column; align-items: center; gap: 3px; color: #4F6644; text-decoration: none"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8h14l-1.2 12H6.2z"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8"/></svg>商店</a>
+</nav>
+<div style="position: absolute; left: 50%; bottom: 8px; width: 134px; height: 5px; margin-left: -67px; border-radius: 3px; background: #1F1D1A"></div>
+</div>
+</template>
+<div id="screen"></div>
+<script>
+
+class Component extends DCLogic {
+  constructor(p){ super(p); this.state = { n: 1, added: [false, false, false, false], b: false }; }
+  renderVals() {
+    const S = [['清嵐', 'img/bottle1.webp'], ['玉容', 'img/bottle2.webp'], ['潤金', 'img/bottle3.webp'], ['棲月', 'img/bottle4.webp']];
+    const s = this.state;
+    return {
+      n: s.n, bCls: s.b ? 'b' : '', cartAria: '購物車，' + s.n + ' 件',
+      singles: S.map((x, i) => { const a = s.added[i]; return { name: x[0], img: x[1], alt: x[0] + '補充瓶', aria: '把' + x[0] + '加入購物車', mark: a ? '✓' : '+',
+        add: () => { const ad = s.added.slice(); ad[i] = true; this.setState({ n: s.n + 1, added: ad, b: false }); setTimeout(() => this.setState({ b: true }), 10); setTimeout(() => { const z = this.state.added.slice(); z[i] = false; this.setState({ added: z }); }, 1200); },
+        btn: 'width:100%;min-height:32px;border-radius:16px;border:0;font:inherit;font-size:16px;font-weight:600;cursor:pointer;background:' + (a ? '#4F6644' : '#EEF2E8') + ';color:' + (a ? '#fff' : '#3B4D33') }; })
+    };
+  }
+}
+
+dcMount(Component, {});
+</script>
+</body></html>

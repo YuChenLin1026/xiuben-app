@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#F4F1EB">
+<title>岫本・誰要用</title>
+<style>html,body{margin:0;height:100%;overflow:hidden;background:#1F1D1A;-webkit-tap-highlight-color:transparent}#screen{position:fixed;left:0;top:0;width:390px;height:844px;transform-origin:0 0;overflow:hidden}</style>
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&amp;family=Noto+Serif+TC:wght@500;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#4F6644}a:hover{color:#3B4D33}
+@keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@keyframes pop{0%{transform:scale(0)}70%{transform:scale(1.15)}100%{transform:scale(1)}}
+.r1{animation:rise .5s cubic-bezier(.2,.8,.2,1) both}.r2{animation:rise .5s .1s cubic-bezier(.2,.8,.2,1) both}.r3{animation:rise .5s .2s cubic-bezier(.2,.8,.2,1) both}
+.card{transition:transform .35s cubic-bezier(.2,.8,.2,1),border-color .25s,box-shadow .3s,background .25s}.card:active{transform:scale(.97)}
+.ck{animation:pop .35s cubic-bezier(.2,.8,.2,1) both}
+.cta{transition:transform .15s,opacity .25s}.cta:active{transform:scale(.97)}
+</style>
+
+<script src="dc.js"></script>
+</head><body>
+<template id="tpl">
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; box-sizing: border-box; background: #F4F1EB; color: #1F1D1A; font-family: -apple-system, 'SF Pro Text', 'Noto Sans TC', sans-serif; padding: 62px 20px 0">
+<a href="Home.html" style="display: inline-flex; align-items: center; gap: 2px; min-height: 44px; font-size: 17px; text-decoration: none"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 5-7 7 7 7"/></svg>今天</a>
+<div class="r1" style="display: flex; gap: 6px; margin-top: 8px" aria-label="步驟 1／4">
+<span style="flex: 1; height: 4px; border-radius: 2px; background: #4F6644"></span><span style="flex: 1; height: 4px; border-radius: 2px; background: #DDD6CA"></span><span style="flex: 1; height: 4px; border-radius: 2px; background: #DDD6CA"></span><span style="flex: 1; height: 4px; border-radius: 2px; background: #DDD6CA"></span>
+</div>
+<h1 class="r1" style="margin: 18px 0 0; font-family: 'Noto Serif TC', serif; font-weight: 700; font-size: 30px">這次誰要用？</h1>
+<p class="r1" style="margin: 6px 0 0; font-size: 15px; color: #6E685E">選了人，會幫你記錄，也會提醒機身高度。</p>
+<div class="r2" style="display: flex; flex-direction: column; gap: 12px; margin-top: 22px">
+<sc-for list="{{ people }}" as="p" hint-placeholder-count="2">
+<button class="card" onClick="{{ p.pick }}" aria-pressed="{{ p.on }}" style="{{ p.style }}">
+<span style="{{ p.av }}">{{ p.ini }}</span>
+<span style="flex: 1; text-align: left"><b style="display: block; font-size: 19px; font-weight: 600">{{ p.name }}</b><span style="display: block; margin-top: 4px; font-size: 14px; color: #6E685E">{{ p.sub }}</span></span>
+<sc-if value="{{ p.isOn }}" hint-placeholder-val="{{ false }}"><span class="ck" style="display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: #4F6644; color: #fff; font-size: 16px">✓</span></sc-if>
+</button>
+</sc-for>
+</div>
+<div class="r3" style="margin-top: 18px; display: flex; gap: 12px; align-items: center; padding: 14px 16px; border-radius: 18px; background: #EAE4D9">
+<svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#4F6644" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/><rect x="8" y="7" width="8" height="10" rx="2"/></svg>
+<span style="font-size: 14px; line-height: 1.6; color: #4A453E">下一步，請把手機鏡頭對準藥瓶蓋上的圖案，掃描這次要用的藥瓶。</span>
+</div>
+<a class="cta" href="Scan.html" style="position: absolute; left: 20px; right: 20px; bottom: 44px; display: grid; place-items: center; min-height: 56px; border-radius: 28px; background: #4F6644; color: #fff; font-size: 17px; font-weight: 500; text-decoration: none">下一步：掃描藥瓶</a>
+<div style="position: absolute; left: 50%; bottom: 8px; width: 134px; height: 5px; margin-left: -67px; border-radius: 3px; background: #1F1D1A"></div>
+</div>
+</template>
+<div id="screen"></div>
+<script>
+
+class Component extends DCLogic {
+  constructor(p){ super(p); this.state = { who: 0 }; }
+  renderVals() {
+    const P = [['孩', '孩子', '7 歲・機身收合 250 mm', '#E3EBDC', '#3B4D33'], ['我', '我', '大人・機身拉高 50 mm', '#F1E6D6', '#6B4E25']];
+    return { people: P.map((p, i) => { const on = this.state.who === i; return {
+      ini: p[0], name: p[1], sub: p[2], isOn: on, on: on ? 'true' : 'false', pick: () => this.setState({ who: i }),
+      av: 'display:grid;place-items:center;width:60px;height:60px;border-radius:50%;font-size:22px;font-weight:700;background:' + p[3] + ';color:' + p[4],
+      style: 'display:flex;align-items:center;gap:16px;width:100%;padding:18px;border-radius:22px;font:inherit;color:#1F1D1A;cursor:pointer;border:2px solid ' + (on ? '#4F6644' : 'transparent') + ';background:' + (on ? '#fff' : '#FBF9F5') + ';box-shadow:' + (on ? '0 12px 28px rgba(79,102,68,.18)' : 'none') + ';transform:' + (on ? 'translateY(-2px)' : 'none')
+    }; }) };
+  }
+}
+
+dcMount(Component, {});
+</script>
+</body></html>

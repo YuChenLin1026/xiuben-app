@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#F4F1EB">
+<title>岫本・單款補充瓶</title>
+<style>html,body{margin:0;height:100%;overflow:hidden;background:#1F1D1A;-webkit-tap-highlight-color:transparent}#screen{position:fixed;left:0;top:0;width:390px;height:844px;transform-origin:0 0;overflow:hidden}</style>
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&amp;family=Noto+Serif+TC:wght@500;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#4F6644}a:hover{color:#3B4D33}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.ph{transition:opacity .5s ease,transform .7s cubic-bezier(.2,.8,.2,1)}
+.r1{animation:rise .5s .1s both}.r2{animation:rise .5s .2s both}.r3{animation:rise .5s .3s both}
+.tab{transition:color .25s}
+.ul{transition:left .35s cubic-bezier(.2,.8,.2,1)}
+.opt{transition:border-color .25s,background .25s}
+.txt{transition:opacity .3s}
+.add{transition:transform .15s}.add:active{transform:scale(.97)}
+</style>
+
+<script src="dc.js"></script>
+</head><body>
+<template id="tpl">
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; box-sizing: border-box; background: #F4F1EB; color: #1F1D1A; font-family: -apple-system, 'SF Pro Text', 'Noto Sans TC', sans-serif">
+<div style="position: relative; height: 380px; overflow: hidden; background: #D9D3C8">
+<sc-for list="{{ photos }}" as="p" hint-placeholder-count="4">
+<img class="ph" src="{{ p.src }}" alt="{{ p.alt }}" style="{{ p.style }}">
+</sc-for>
+<a href="Shop.html" aria-label="返回商店" style="position: absolute; left: 20px; top: 54px; display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: rgba(255,255,255,.85); color: #1F1D1A"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 5-7 7 7 7"/></svg></a>
+</div>
+<div style="padding: 0 20px">
+<div class="r1" role="tablist" aria-label="選擇款式" style="position: relative; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-bottom: 1px solid #E4DDD1">
+<span class="ul" style="position: absolute; bottom: -1px; height: 2px; width: 25%; left: {{ ul }}; background: #1F1D1A"></span>
+<sc-for list="{{ tabs }}" as="t" hint-placeholder-count="4">
+<button class="tab" role="tab" onClick="{{ t.pick }}" aria-selected="{{ t.on }}" style="{{ t.style }}">{{ t.label }}</button>
+</sc-for>
+</div>
+<div class="r2" style="display: flex; align-items: flex-end; justify-content: space-between; margin-top: 16px">
+<div><p style="margin: 0; font-size: 12px; letter-spacing: 0.2em; color: #8A6A3A">{{ no }}</p><h1 style="margin: 2px 0 0; font-family: 'Noto Serif TC', serif; font-weight: 700; font-size: 30px; letter-spacing: 0.16em">{{ name }}</h1></div>
+<span style="font-family: 'Noto Serif TC', serif; font-size: 17px; letter-spacing: 0.16em; color: #3B4D33">{{ eff }}</span>
+</div>
+<p class="r2" style="margin: 6px 0 0; font-size: 14px; color: #6E685E">{{ line }}・每瓶 6 mL，一次的份量</p>
+<div class="r3" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-top: 14px">
+<sc-for list="{{ packs }}" as="k" hint-placeholder-count="2">
+<button class="opt" onClick="{{ k.pick }}" aria-pressed="{{ k.on }}" style="{{ k.style }}"><b style="display: block; font-size: 15px; font-weight: 600">{{ k.t }}</b><span style="font-size: 13px; color: #6E685E">{{ k.p }}</span></button>
+</sc-for>
+</div>
+<p class="r3" style="margin: 10px 2px 0; font-size: 12px; color: #6E685E">價格暫定。配方為概念示意，非療效宣稱。</p>
+</div>
+<div style="position: absolute; left: 0; right: 0; bottom: 0; padding: 12px 20px 34px; background: rgba(244,241,235,.96); border-top: 1px solid #E4DDD1; display: flex; align-items: center; gap: 12px">
+<span><span style="display: block; font-size: 12px; color: #6E685E">小計</span><b style="font-size: 20px">{{ price }}</b></span>
+<a class="add" href="Cart.html" style="flex: 1; display: grid; place-items: center; min-height: 52px; border-radius: 26px; background: #4F6644; color: #fff; font-size: 16px; font-weight: 500; text-decoration: none">加入購物車</a>
+</div>
+</div>
+</template>
+<div id="screen"></div>
+<script>
+
+class Component extends DCLogic {
+  constructor(p){ super(p); this.state = { i: 0, k: 0 }; }
+  renderVals() {
+    const B = [['No.01', '清嵐', '宣竅清息', '一呼一吸，如入山林', 'img/photo1.webp'], ['No.02', '玉容', '養榮潤色', '由內而外，氣色自來', 'img/photo2.webp'], ['No.03', '潤金', '潤肺生津', '金水相生，喉間回甘', 'img/photo3.webp'], ['No.04', '棲月', '寧心安神', '一枕月色，緩緩入眠', 'img/photo4.webp']];
+    const K = [['一瓶', 240], ['同款四瓶', 880]], s = this.state, b = B[s.i];
+    return {
+      photos: B.map((x, i) => ({ src: x[4], alt: x[0] + ' ' + x[1] + ' 藥瓶照片', style: 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:' + (s.i === i ? 1 : 0) + ';transform:scale(' + (s.i === i ? 1 : 1.06) + ')' })),
+      ul: (s.i * 25) + '%',
+      tabs: B.map((x, i) => ({ label: x[1], on: s.i === i ? 'true' : 'false', pick: () => this.setState({ i }), style: 'min-height:48px;border:0;background:none;font:inherit;font-family:Noto Serif TC,serif;font-size:16px;cursor:pointer;color:' + (s.i === i ? '#1F1D1A' : '#8A8478') })),
+      no: b[0], name: b[1], eff: b[2], line: b[3],
+      packs: K.map((k, i) => ({ t: k[0], p: 'NT$' + k[1] + (i ? '（省 NT$40）' : ''), on: s.k === i ? 'true' : 'false', pick: () => this.setState({ k: i }),
+        style: 'padding:12px;border-radius:14px;font:inherit;color:#1F1D1A;text-align:left;cursor:pointer;border:2px solid ' + (s.k === i ? '#4F6644' : 'transparent') + ';background:#fff' })),
+      price: 'NT$' + K[s.k][1]
+    };
+  }
+}
+
+dcMount(Component, {});
+</script>
+</body></html>

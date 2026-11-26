@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#F4F1EB">
+<title>岫本・今天</title>
+<style>html,body{margin:0;height:100%;overflow:hidden;background:#1F1D1A;-webkit-tap-highlight-color:transparent}#screen{position:fixed;left:0;top:0;width:390px;height:844px;transform-origin:0 0;overflow:hidden}</style>
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&amp;family=Noto+Serif+TC:wght@500;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#4F6644}a:hover{color:#3B4D33}
+@keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@keyframes fill{from{width:0}}
+@keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@keyframes breathe{0%,100%{box-shadow:0 10px 24px rgba(79,102,68,.28),0 0 0 0 rgba(79,102,68,.18)}50%{box-shadow:0 10px 24px rgba(79,102,68,.28),0 0 0 10px rgba(79,102,68,0)}}
+@keyframes dot{from{transform:scale(0)}to{transform:scale(1)}}
+.r1{animation:rise .55s cubic-bezier(.2,.8,.2,1) both}.r2{animation:rise .55s .08s cubic-bezier(.2,.8,.2,1) both}.r3{animation:rise .55s .16s cubic-bezier(.2,.8,.2,1) both}.r4{animation:rise .55s .24s cubic-bezier(.2,.8,.2,1) both}
+.fill{animation:fill 1.2s .4s cubic-bezier(.2,.8,.2,1) both}
+.dev{animation:floaty 4s ease-in-out infinite}
+.cta{animation:breathe 2.6s ease-in-out infinite;transition:transform .15s}.cta:active{transform:scale(.97)}
+.dd{animation:dot .4s cubic-bezier(.2,.8,.2,1.4) both}
+.mb{transition:transform .15s,border-color .2s,background .2s}.mb:active{transform:scale(.96)}
+</style>
+
+<script src="dc.js"></script>
+</head><body>
+<template id="tpl">
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; box-sizing: border-box; background: #F4F1EB; color: #1F1D1A; font-family: -apple-system, 'SF Pro Text', 'Noto Sans TC', sans-serif; padding: 62px 20px 0">
+<div class="r1" style="display: flex; align-items: flex-end; justify-content: space-between">
+<div>
+<p style="margin: 0; font-size: 14px; color: #6E685E">11 月 26 日，星期四</p>
+<h1 style="margin: 2px 0 0; font-family: 'Noto Serif TC', serif; font-weight: 700; font-size: 34px">今天</h1>
+</div>
+<a href="Family.html" aria-label="家庭成員" style="display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: #fff; color: #1F1D1A"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.6 3.4-5.5 6.5-5.5s5.7 1.9 6.5 5.5"/><path d="M16 4.8a3.3 3.3 0 0 1 0 6.4M18 14.8c2 .7 3.2 2.4 3.6 5.2"/></svg></a>
+</div>
+<div class="r2" style="margin-top: 18px; display: flex; align-items: center; gap: 14px; background: #fff; border-radius: 22px; padding: 14px 16px 14px 10px">
+<div style="width: 64px; height: 96px; display: grid; place-items: center"><img class="dev" src="{{ devImg }}" alt="{{ devName }}" style="height: 92px"></div>
+<div style="flex: 1; min-width: 0">
+<div style="display: flex; align-items: center; gap: 6px; font-size: 13px; color: #4F6644"><span style="width: 7px; height: 7px; border-radius: 50%; background: #5E8A4E"></span>已連線</div>
+<div style="font-weight: 500; font-size: 17px; margin-top: 2px">{{ devName }}</div>
+<div style="display: flex; align-items: center; gap: 8px; margin-top: 10px; font-size: 12px; color: #6E685E">
+<span>電量</span>
+<div style="flex: 1; height: 6px; border-radius: 3px; background: #ECE6DB; overflow: hidden"><div class="fill" style="width: 82%; height: 100%; border-radius: 3px; background: #4F6644"></div></div>
+<span>82%</span>
+</div>
+</div>
+</div>
+<div class="r3" style="margin-top: 22px">
+<div style="display: flex; justify-content: space-between; align-items: baseline"><h2 style="margin: 0; font-size: 17px; font-weight: 700">家人</h2><a href="Family.html" style="font-size: 14px; text-decoration: none">管理</a></div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 10px">
+<a class="mb" href="Member.html" style="display: flex; gap: 10px; align-items: center; padding: 12px; border-radius: 18px; background: #fff; color: #1F1D1A; text-decoration: none">
+<span style="display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: #E3EBDC; color: #3B4D33; font-weight: 700">孩</span>
+<span><b style="display: block; font-weight: 500; font-size: 15px">孩子</b><span style="font-size: 12px; color: #6E685E">今天還沒用</span></span>
+</a>
+<a class="mb" href="Member.html" style="display: flex; gap: 10px; align-items: center; padding: 12px; border-radius: 18px; background: #fff; color: #1F1D1A; text-decoration: none">
+<span style="display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: #F1E6D6; color: #6B4E25; font-weight: 700">我</span>
+<span><b style="display: block; font-weight: 500; font-size: 15px">我</b><span style="font-size: 12px; color: #6E685E">早上 7:40 用過</span></span>
+</a>
+</div>
+</div>
+<div class="r4" style="margin-top: 22px; background: #fff; border-radius: 22px; padding: 16px">
+<div style="display: flex; justify-content: space-between; align-items: center"><b style="font-weight: 700; font-size: 15px">全家這週</b><a href="Achieve.html" style="font-size: 13px; text-decoration: none">成就</a></div>
+<div style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; margin-top: 12px; text-align: center; font-size: 11px; color: #6E685E">
+<sc-for list="{{ week }}" as="d" hint-placeholder-count="7">
+<div style="display: flex; flex-direction: column; align-items: center; gap: 6px">
+<span class="dd" style="{{ d.style }}"></span>{{ d.label }}
+</div>
+</sc-for>
+</div>
+<div style="margin-top: 14px; display: flex; align-items: center; gap: 10px; font-size: 13px">
+<span style="flex: 1; color: #5E584F">再 2 天，全家拿到「七日之雲」</span>
+<div style="width: 90px; height: 6px; border-radius: 3px; background: #ECE6DB; overflow: hidden"><div class="fill" style="width: 71%; height: 100%; background: #A8875A; border-radius: 3px"></div></div>
+</div>
+</div>
+<a class="cta" href="Who.html" style="position: absolute; left: 20px; right: 20px; bottom: 112px; display: flex; align-items: center; justify-content: center; gap: 10px; min-height: 58px; border-radius: 29px; background: #4F6644; color: #fff; font-size: 18px; font-weight: 500; letter-spacing: 0.08em; text-decoration: none">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M8 18c-3 0-5-2-5-4.5S5 9 8 9c.4-3 2.7-5 5.5-5S19 6.2 19.4 9.3C21.4 9.9 22 11.5 22 13c0 2.8-2 5-5 5H8z"/></svg>
+開始使用
+</a>
+<nav aria-label="主要分頁" style="position: absolute; left: 0; right: 0; bottom: 0; height: 88px; box-sizing: border-box; padding: 8px 10px 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); background: rgba(244,241,235,.94); border-top: 1px solid #E4DDD1; font-size: 11px">
+<a href="Home.html" aria-current="page" style="display: flex; flex-direction: column; align-items: center; gap: 3px; color: #4F6644; text-decoration: none"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 4l9 6.5V20H3z"/><path d="M9.5 20v-5h5v5"/></svg>今天</a>
+<a href="Records.html" style="display: flex; flex-direction: column; align-items: center; gap: 3px; color: #8A8478; text-decoration: none"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><rect x="4" y="4" width="16" height="17" rx="2.5"/><path d="M8 2.5v3M16 2.5v3M4 9.5h16M8 14h4M8 17.5h7"/></svg>紀錄</a>
+<a href="Achieve.html" style="display: flex; flex-direction: column; align-items: center; gap: 3px; color: #8A8478; text-decoration: none"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="9" r="6"/><path d="m8.5 14 -1.5 7.5 5-2.5 5 2.5-1.5-7.5"/></svg>成就</a>
+<a href="Shop.html" style="display: flex; flex-direction: column; align-items: center; gap: 3px; color: #8A8478; text-decoration: none"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8h14l-1.2 12H6.2z"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8"/></svg>商店</a>
+</nav>
+<div style="position: absolute; left: 50%; bottom: 8px; width: 134px; height: 5px; margin-left: -67px; border-radius: 3px; background: #1F1D1A"></div>
+</div>
+</template>
+<div id="screen"></div>
+<script>
+
+class Component extends DCLogic {
+  renderVals() {
+    const L = ['一', '二', '三', '四', '五', '六', '日'], done = [1, 1, 1, 0, 0, 0, 0], today = 3;
+    const blk = (this.props.model ?? '綠色款') === '黑色款';
+    return { devImg: blk ? 'img/device_k.webp' : 'img/device.webp', devName: '岫本・' + (blk ? '黑色款' : '綠色款'), week: L.map((l, i) => ({ label: l, style: 'display:block;width:26px;height:26px;border-radius:50%;animation-delay:' + (0.5 + i * 0.07) + 's;' + (done[i] ? 'background:#4F6644' : i === today ? 'border:2px solid #4F6644;box-sizing:border-box' : 'background:#ECE6DB') })) };
+  }
+}
+
+dcMount(Component, {"model": "綠色款"});
+</script>
+</body></html>

@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#F4F1EB">
+<title>岫本・兌換獎勵</title>
+<style>html,body{margin:0;height:100%;overflow:hidden;background:#1F1D1A;-webkit-tap-highlight-color:transparent}#screen{position:fixed;left:0;top:0;width:390px;height:844px;transform-origin:0 0;overflow:hidden}</style>
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&amp;family=Noto+Serif+TC:wght@500;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#4F6644}a:hover{color:#3B4D33}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes pop{0%{transform:scale(.6);opacity:0}70%{transform:scale(1.06)}100%{transform:scale(1);opacity:1}}
+@keyframes bump{0%{transform:scale(1)}40%{transform:scale(1.12)}100%{transform:scale(1)}}
+.r1{animation:rise .5s both}.r2{animation:rise .5s .08s both}
+.it{animation:rise .5s both;transition:transform .15s}
+.pop{animation:pop .45s cubic-bezier(.2,.8,.2,1) both}
+.pts{display:inline-block}.pts.b{animation:bump .5s ease}
+.rd{transition:background .25s,color .25s,transform .15s}.rd:active{transform:scale(.95)}
+.more{display:grid;grid-template-rows:0fr;transition:grid-template-rows .35s}.more.open{grid-template-rows:1fr}.more>div{overflow:hidden}
+</style>
+
+<script src="dc.js"></script>
+</head><body>
+<template id="tpl">
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; box-sizing: border-box; background: #F4F1EB; color: #1F1D1A; font-family: -apple-system, 'SF Pro Text', 'Noto Sans TC', sans-serif; padding: 62px 20px 0">
+<a href="Achieve.html" style="display: inline-flex; align-items: center; gap: 2px; min-height: 44px; font-size: 17px; text-decoration: none"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 5-7 7 7 7"/></svg>成就</a>
+<div class="r1" style="display: flex; align-items: flex-end; justify-content: space-between; margin-top: 4px">
+<h1 style="margin: 0; font-family: 'Noto Serif TC', serif; font-weight: 700; font-size: 30px">兌換</h1>
+<span style="font-size: 14px; color: #6E685E">全家雲點 <b class="pts {{ bumpCls }}" style="font-family: 'Noto Serif TC', serif; font-size: 24px; color: #8A6A3A">{{ pts }}</b></span>
+</div>
+<div class="r2" style="margin-top: 12px; border-radius: 16px; background: #fff; overflow: hidden">
+<button onClick="{{ toggleHow }}" aria-expanded="{{ howExp }}" style="display: flex; align-items: center; width: 100%; min-height: 48px; padding: 0 16px; border: 0; background: none; font: inherit; font-size: 14px; color: #1F1D1A; cursor: pointer; text-align: left"><span style="flex: 1">怎麼拿雲點？</span><span style="color: #8A8478">{{ howSign }}</span></button>
+<div class="more {{ howCls }}"><div><ul style="margin: 0; padding: 0 16px 14px 34px; font-size: 13px; line-height: 1.9; color: #4A453E"><li>每次用滿 10 分鐘：＋10（提早結束不算）</li><li>每瓶的 QR code 只能掃一次，掃過就失效</li><li>拿到一枚獎章：＋50</li><li>空瓶寄回或拿到門市回收：每瓶＋20</li></ul></div></div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 10px; margin-top: 12px">
+<sc-for list="{{ items }}" as="it" hint-placeholder-count="5">
+<div class="it" style="{{ it.wrap }}">
+<span style="{{ it.icon }}">{{ it.ch }}</span>
+<span style="flex: 1"><b style="display: block; font-size: 15px; font-weight: 600">{{ it.name }}</b><span style="font-size: 12.5px; color: #6E685E">{{ it.sub }}</span></span>
+<sc-if value="{{ it.done }}" hint-placeholder-val="{{ false }}"><span class="pop" style="font-size: 13px; color: #3B4D33; font-weight: 600; padding: 8px 12px; border-radius: 12px; background: #EEF2E8">已兌換</span></sc-if>
+<sc-if value="{{ it.notDone }}" hint-placeholder-val="{{ true }}"><button class="rd" onClick="{{ it.redeem }}" disabled="{{ it.dis }}" style="{{ it.btn }}">{{ it.cost }}</button></sc-if>
+</div>
+</sc-for>
+</div>
+<p style="margin: 12px 4px 0; font-size: 12px; color: #6E685E">兌換的折扣券會放進商店結帳頁，下一單自動套用。</p>
+<div style="position: absolute; left: 50%; bottom: 8px; width: 134px; height: 5px; margin-left: -67px; border-radius: 3px; background: #1F1D1A"></div>
+</div>
+</template>
+<div id="screen"></div>
+<script>
+
+class Component extends DCLogic {
+  constructor(p){ super(p); this.state = { pts: 320, got: [], how: false, b: 0 }; }
+  renderVals() {
+    const R = [['折', '藥瓶 9 折券', '下次買補充瓶用', 150, '#F1E6D6', '#6B4E25'], ['芯', '棉芯替換包', '30 支，免費寄到家', 250, '#EEF2E8', '#3B4D33'], ['瓶', '單款補充瓶一瓶', '四款任選一瓶', 480, '#E3EBDC', '#3B4D33'], ['月', '限定瓶蓋「月白」', '收藏瓶蓋，只能用雲點換', 600, '#E6E1F0', '#4A3F6B'], ['回', '空瓶回收點數加倍', '本月寄回的空瓶，每瓶＋40', 200, '#DDE8EE', '#2E4F5E']];
+    const s = this.state;
+    return {
+      pts: s.pts, bumpCls: s.b ? 'b' : '',
+      toggleHow: () => this.setState({ how: !s.how }), howExp: s.how ? 'true' : 'false', howCls: s.how ? 'open' : '', howSign: s.how ? '−' : '＋',
+      items: R.map((r, i) => { const done = s.got.includes(i), can = s.pts >= r[3]; return {
+        ch: r[0], name: r[1], sub: r[2], cost: r[3] + ' 點', done, notDone: !done, dis: !can,
+        redeem: () => { if (!can) return; this.setState({ pts: s.pts - r[3], got: s.got.concat(i), b: 0 }); setTimeout(() => this.setState({ b: 1 }), 10); },
+        wrap: 'display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:18px;background:#fff;animation-delay:' + (0.1 + i * 0.06) + 's',
+        icon: 'flex:none;display:grid;place-items:center;width:44px;height:44px;border-radius:12px;font-family:Noto Serif TC,serif;font-weight:700;font-size:18px;background:' + r[4] + ';color:' + r[5],
+        btn: 'min-width:76px;min-height:38px;border-radius:19px;border:0;font:inherit;font-size:13.5px;font-weight:600;cursor:' + (can ? 'pointer' : 'default') + ';background:' + (can ? '#4F6644' : '#E6E0D6') + ';color:' + (can ? '#fff' : '#8A8478')
+      }; })
+    };
+  }
+}
+
+dcMount(Component, {});
+</script>
+</body></html>

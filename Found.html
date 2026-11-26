@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#F4F1EB">
+<title>岫本・藥瓶浮現</title>
+<style>html,body{margin:0;height:100%;overflow:hidden;background:#1F1D1A;-webkit-tap-highlight-color:transparent}#screen{position:fixed;left:0;top:0;width:390px;height:844px;transform-origin:0 0;overflow:hidden}</style>
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&amp;family=Noto+Serif+TC:wght@500;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#4F6644}a:hover{color:#3B4D33}
+@keyframes appear{0%{opacity:0;transform:translateY(40px) scale(.7);filter:blur(8px)}60%{opacity:1;filter:blur(0)}100%{opacity:1;transform:none}}
+@keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+@keyframes glow{0%,100%{transform:scale(1);opacity:.75}50%{transform:scale(1.08);opacity:1}}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes shine{0%{transform:translateX(-140%) rotate(20deg)}60%,100%{transform:translateX(260%) rotate(20deg)}}
+@keyframes flip{0%,20%{transform:rotate(0)}45%,70%{transform:rotate(180deg)}100%{transform:rotate(180deg) translateY(-4px)}}
+.ap{animation:appear .9s cubic-bezier(.2,.8,.2,1) both}
+.fl{animation:floaty 4.2s 1s ease-in-out infinite}
+.gl{animation:glow 3.4s ease-in-out infinite}
+.t1{animation:rise .5s .45s both}.t2{animation:rise .5s .6s both}.t3{animation:rise .5s .75s both}
+.sh{position:absolute;top:-10%;bottom:-10%;width:34%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.45),transparent);animation:shine 3.2s 1.1s ease-in-out infinite}
+.fp{animation:flip 2.6s ease-in-out infinite;transform-origin:50% 50%}
+.chip{transition:background .2s,border-color .2s}
+.cta{transition:transform .15s}.cta:active{transform:scale(.97)}
+</style>
+
+<script src="dc.js"></script>
+</head><body>
+<template id="tpl">
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; box-sizing: border-box; background: #F4F1EB; color: #1F1D1A; font-family: -apple-system, 'SF Pro Text', 'Noto Sans TC', sans-serif; padding: 62px 20px 0">
+<div style="display: flex; align-items: center; justify-content: space-between">
+<a href="Scan.html" style="display: inline-flex; align-items: center; gap: 2px; min-height: 44px; font-size: 17px; text-decoration: none"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 5-7 7 7 7"/></svg>重掃</a>
+<span style="font-size: 13px; color: #4F6644; display: flex; align-items: center; gap: 6px"><span style="width: 7px; height: 7px; border-radius: 50%; background: #5E8A4E"></span>已辨識</span>
+</div>
+<div style="position: relative; height: 300px; margin-top: 4px; display: grid; place-items: center">
+<div class="gl" style="position: absolute; width: 250px; height: 250px; border-radius: 50%; background: radial-gradient(circle, {{ glow }} 0, rgba(244,241,235,0) 68%)"></div>
+<div class="fl" style="position: relative">
+<div class="ap" style="position: relative; width: 200px">
+<img src="{{ img }}" alt="{{ alt }}" style="display: block; width: 200px; filter: drop-shadow(0 22px 22px rgba(60,50,30,.22))">
+<div style="position: absolute; left: 50%; bottom: -14px; width: 150px; height: 18px; margin-left: -75px; border-radius: 50%; background: radial-gradient(closest-side, rgba(60,50,30,.18), rgba(60,50,30,0))"></div>
+</div>
+</div>
+</div>
+<div style="text-align: center">
+<p class="t1" style="margin: 0; font-size: 13px; letter-spacing: 0.24em; color: #8A6A3A">{{ no }}</p>
+<h1 class="t1" style="margin: 4px 0 0; font-family: 'Noto Serif TC', serif; font-weight: 700; font-size: 40px; letter-spacing: 0.24em">{{ name }}</h1>
+<p class="t2" style="margin: 6px 0 0; font-family: 'Noto Serif TC', serif; font-size: 17px; letter-spacing: 0.2em; color: #3B4D33">{{ effect }}</p>
+<p class="t2" style="margin: 6px 0 0; font-size: 14px; color: #6E685E">{{ line }}・6 mL，一次的份量</p>
+</div>
+<div class="t3" style="margin-top: 18px; display: flex; align-items: center; gap: 14px; padding: 14px 16px; border-radius: 18px; background: #fff">
+<svg class="fp" width="34" height="34" viewBox="0 0 34 34" aria-hidden="true"><rect x="10" y="4" width="14" height="6" rx="1.5" fill="#C9B38E"/><rect x="8" y="10" width="18" height="20" rx="6" fill="#A9BC9C"/></svg>
+<span style="flex: 1; font-size: 14px; line-height: 1.6">轉開瓶蓋，倒過來，對準瓶座順時針旋入，轉到卡住。</span>
+</div>
+<p class="t3" style="margin: 14px 4px 0; font-size: 12.5px; line-height: 1.6; color: #6E685E">每瓶的 QR code 只能用一次：開始後就綁定這次使用，之後不能再掃。不是這一瓶？回上一步重新掃描。</p>
+<a class="cta" href="Check.html" style="position: absolute; left: 20px; right: 20px; bottom: 44px; display: grid; place-items: center; min-height: 56px; border-radius: 28px; background: #4F6644; color: #fff; font-size: 17px; font-weight: 500; text-decoration: none">旋好了，下一步</a>
+<div style="position: absolute; left: 50%; bottom: 8px; width: 134px; height: 5px; margin-left: -67px; border-radius: 3px; background: #1F1D1A"></div>
+</div>
+</template>
+<div id="screen"></div>
+<script>
+
+class Component extends DCLogic {
+  renderVals() {
+    const idx = ['No.01 清嵐', 'No.02 玉容', 'No.03 潤金', 'No.04 棲月'].indexOf(this.props.scanned ?? 'No.01 清嵐');
+    const B = [
+      ['No.01', '清嵐', '宣竅清息', '一呼一吸，如入山林', 'img/bottle1.webp', 'rgba(140,175,95,.55)'],
+      ['No.02', '玉容', '養榮潤色', '由內而外，氣色自來', 'img/bottle2.webp', 'rgba(150,95,85,.45)'],
+      ['No.03', '潤金', '潤肺生津', '金水相生，喉間回甘', 'img/bottle3.webp', 'rgba(190,120,60,.45)'],
+      ['No.04', '棲月', '寧心安神', '一枕月色，緩緩入眠', 'img/bottle4.webp', 'rgba(215,175,105,.5)']];
+    const b = B[Math.max(0, idx)];
+    return { no: b[0], name: b[1], effect: b[2], line: b[3], img: b[4], glow: b[5], alt: b[0] + ' ' + b[1] + ' 藥瓶' };
+  }
+}
+
+dcMount(Component, {"scanned": "No.01 清嵐"});
+</script>
+</body></html>

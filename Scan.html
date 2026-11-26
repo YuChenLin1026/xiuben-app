@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#F4F1EB">
+<title>岫本・掃描藥瓶</title>
+<style>html,body{margin:0;height:100%;overflow:hidden;background:#1F1D1A;-webkit-tap-highlight-color:transparent}#screen{position:fixed;left:0;top:0;width:390px;height:844px;transform-origin:0 0;overflow:hidden}</style>
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#fff}a:hover{color:#E3EBDC}
+@keyframes sweep{0%{top:8%;opacity:0}10%{opacity:1}90%{opacity:1}100%{top:88%;opacity:0}}
+@keyframes corner{0%,100%{transform:scale(1)}50%{transform:scale(.94)}}
+@keyframes drift{0%,100%{transform:scale(1.12) translate(0,0)}50%{transform:scale(1.14) translate(-6px,4px)}}
+@keyframes rise{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:none}}
+@keyframes blink{0%,100%{opacity:.55}50%{opacity:1}}
+.line{position:absolute;left:6%;right:6%;height:2px;border-radius:2px;background:linear-gradient(90deg,transparent,#B9D7A6,transparent);box-shadow:0 0 14px 3px rgba(185,215,166,.6);animation:sweep 2.2s ease-in-out infinite}
+.vf{animation:corner 2.2s ease-in-out infinite}
+.cam{animation:drift 6s ease-in-out infinite}
+.hint{animation:blink 2.2s ease-in-out infinite}
+.btn{transition:transform .15s}.btn:active{transform:scale(.95)}
+</style>
+
+<script src="dc.js"></script>
+</head><body>
+<template id="tpl">
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; background: #0E0E0C; color: #fff; font-family: -apple-system, 'SF Pro Text', 'Noto Sans TC', sans-serif">
+<img class="cam" src="img/photo1.webp" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: blur(1.5px) brightness(.62)">
+<div style="position: absolute; inset: 0; background: radial-gradient(56% 34% at 50% 44%, rgba(0,0,0,0) 0, rgba(0,0,0,.55) 100%)"></div>
+<div style="position: absolute; left: 0; right: 0; top: 54px; display: flex; align-items: center; justify-content: space-between; padding: 0 16px">
+<a class="btn" href="Who.html" aria-label="返回" style="display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: rgba(255,255,255,.16); backdrop-filter: blur(10px)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 5-7 7 7 7"/></svg></a>
+<b style="font-weight: 600; font-size: 17px">掃描藥瓶</b>
+<button class="btn" aria-label="開啟手電筒" style="display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; border: 0; background: rgba(255,255,255,.16); cursor: pointer"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3h8l-1 5H9z"/><path d="M9 8h6v12a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1z"/><path d="M12 12v3"/></svg></button>
+</div>
+<div class="vf" style="position: absolute; left: 70px; right: 70px; top: 230px; height: 250px">
+<span style="position: absolute; left: 0; top: 0; width: 46px; height: 46px; border-left: 4px solid #fff; border-top: 4px solid #fff; border-radius: 18px 0 0 0"></span>
+<span style="position: absolute; right: 0; top: 0; width: 46px; height: 46px; border-right: 4px solid #fff; border-top: 4px solid #fff; border-radius: 0 18px 0 0"></span>
+<span style="position: absolute; left: 0; bottom: 0; width: 46px; height: 46px; border-left: 4px solid #fff; border-bottom: 4px solid #fff; border-radius: 0 0 0 18px"></span>
+<span style="position: absolute; right: 0; bottom: 0; width: 46px; height: 46px; border-right: 4px solid #fff; border-bottom: 4px solid #fff; border-radius: 0 0 18px 0"></span>
+<div class="line"></div>
+</div>
+<p class="hint" style="position: absolute; left: 0; right: 0; top: 500px; margin: 0; text-align: center; font-size: 16px; font-weight: 500">對準瓶蓋上的 QR code</p>
+<p style="position: absolute; left: 32px; right: 32px; top: 530px; margin: 0; text-align: center; font-size: 13px; line-height: 1.6; color: rgba(255,255,255,.75)">每一瓶都有自己的 QR code，掃到哪一瓶，這次就用哪一瓶。</p>
+<div style="position: absolute; left: 20px; right: 20px; bottom: 44px; display: flex; flex-direction: column; gap: 10px">
+<a class="btn" href="Found.html" style="display: grid; place-items: center; min-height: 56px; border-radius: 28px; background: #fff; color: #1F1D1A; font-size: 17px; font-weight: 500; text-decoration: none">（原型）模擬掃到新藥瓶</a>
+<button class="btn" onClick="{{ used }}" style="min-height: 44px; border: 1px solid rgba(255,255,255,.5); border-radius: 22px; background: none; color: #fff; font: inherit; font-size: 14px; cursor: pointer">（原型）模擬掃到用過的藥瓶</button>
+<p style="margin: 0; text-align: center; font-size: 13px; line-height: 1.6; color: rgba(255,255,255,.8)">掃不到？擦乾瓶蓋、打開右上角手電筒再試一次。</p>
+</div>
+<sc-if value="{{ showUsed }}" hint-placeholder-val="{{ false }}">
+<div style="position: absolute; inset: 0; background: rgba(0,0,0,.5)"></div>
+<div role="alertdialog" aria-label="這瓶已經用過" style="position: absolute; left: 16px; right: 16px; bottom: 36px; padding: 22px 20px 14px; border-radius: 24px; background: #F4F1EB; color: #1F1D1A; animation: corner .01s, rise .35s cubic-bezier(.2,.8,.2,1) both">
+<div style="display: grid; place-items: center; width: 48px; height: 48px; border-radius: 50%; background: #F4E4DF; color: #B4553F; font-size: 24px; font-weight: 700">!</div>
+<b style="display: block; margin-top: 12px; font-size: 18px; font-weight: 600">這瓶已經用過了</b>
+<p style="margin: 6px 0 0; font-size: 14px; line-height: 1.6; color: #5E584F">No.01 清嵐 在 11 月 25 日 20:28 用過。每瓶的 QR code 只能掃一次，請換一瓶新的。空瓶可以寄回換雲點。</p>
+<a href="Shop.html" style="display: grid; place-items: center; min-height: 52px; margin-top: 16px; border-radius: 26px; background: #4F6644; color: #fff; font-size: 16px; font-weight: 500; text-decoration: none">去補貨</a>
+<button onClick="{{ close }}" style="width: 100%; min-height: 46px; margin-top: 4px; border: 0; background: none; font: inherit; font-size: 15px; color: #4F6644; cursor: pointer">換一瓶再掃</button>
+</div>
+</sc-if>
+<div style="position: absolute; left: 50%; bottom: 8px; width: 134px; height: 5px; margin-left: -67px; border-radius: 3px; background: #fff"></div>
+</div>
+</template>
+<div id="screen"></div>
+<script>
+
+class Component extends DCLogic {
+  renderVals() { return { showUsed: !!this.state?.u, used: () => this.setState({ u: true }), close: () => this.setState({ u: false }) }; }
+}
+
+dcMount(Component, {});
+</script>
+</body></html>

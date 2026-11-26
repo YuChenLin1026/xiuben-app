@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#F4F1EB">
+<title>岫本・完成與清洗</title>
+<style>html,body{margin:0;height:100%;overflow:hidden;background:#1F1D1A;-webkit-tap-highlight-color:transparent}#screen{position:fixed;left:0;top:0;width:390px;height:844px;transform-origin:0 0;overflow:hidden}</style>
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&amp;family=Noto+Serif+TC:wght@500;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#4F6644}a:hover{color:#3B4D33}
+@keyframes pop{0%{transform:scale(0)}65%{transform:scale(1.15)}100%{transform:scale(1)}}
+@keyframes draw{from{stroke-dashoffset:40}to{stroke-dashoffset:0}}
+@keyframes fall{0%{transform:translateY(-40px) rotate(0);opacity:0}15%{opacity:1}100%{transform:translateY(260px) rotate(220deg);opacity:0}}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes fill{from{width:71%}to{width:86%}}
+.ok{animation:pop .6s cubic-bezier(.2,.8,.2,1) both}
+.tk{stroke-dasharray:40;animation:draw .5s .35s ease-out both}
+.lf{position:absolute;top:60px;width:14px;height:8px;border-radius:8px 0;animation:fall 3.2s linear infinite}
+.r1{animation:rise .5s .3s both}.r2{animation:rise .5s .45s both}.r3{animation:rise .5s .6s both}
+.fill{animation:fill 1.2s .9s cubic-bezier(.2,.8,.2,1) both}
+.chip{transition:background .2s,border-color .2s,transform .15s}.chip:active{transform:scale(.95)}
+.st{transition:opacity .25s}
+</style>
+
+<script src="dc.js"></script>
+</head><body>
+<template id="tpl">
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; box-sizing: border-box; background: #F4F1EB; color: #1F1D1A; font-family: -apple-system, 'SF Pro Text', 'Noto Sans TC', sans-serif; padding: 70px 20px 0">
+<span class="lf" style="left: 40px; background: #A9BC9C; animation-delay: 0s"></span><span class="lf" style="left: 110px; background: #D6B88A; animation-delay: .7s"></span><span class="lf" style="left: 200px; background: #A9BC9C; animation-delay: 1.3s"></span><span class="lf" style="left: 280px; background: #C9B38E; animation-delay: .4s"></span><span class="lf" style="left: 340px; background: #8FAA80; animation-delay: 1.9s"></span>
+<div style="display: flex; flex-direction: column; align-items: center">
+<div class="ok" style="display: grid; place-items: center; width: 76px; height: 76px; border-radius: 50%; background: #4F6644"><svg width="38" height="38" viewBox="0 0 24 24" aria-hidden="true"><path class="tk" d="M5 12.5 10 17.5 19 7" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+<h1 class="r1" style="margin: 14px 0 0; font-family: 'Noto Serif TC', serif; font-weight: 700; font-size: 30px">完成了！</h1>
+<p class="r1" style="margin: 4px 0 0; font-size: 15px; color: #6E685E">孩子・No.01 清嵐・10 分鐘・6 顆星</p>
+<p class="r1" style="margin: 8px 0 0; padding: 4px 12px; border-radius: 12px; background: #EEF2E8; font-size: 13px; color: #3B4D33">用滿 10 分鐘，已計入成就・＋10 雲點</p>
+</div>
+<div class="r2" style="margin-top: 18px; padding: 14px 16px; border-radius: 18px; background: #fff">
+<div style="display: flex; justify-content: space-between; font-size: 14px"><b style="font-weight: 600">全家：七日之雲</b><span style="color: #8A6A3A">6／7 天</span></div>
+<div style="margin-top: 10px; height: 8px; border-radius: 4px; background: #ECE6DB; overflow: hidden"><div class="fill" style="width: 86%; height: 100%; border-radius: 4px; background: #A8875A"></div></div>
+<p style="margin: 8px 0 0; font-size: 13px; color: #6E685E">明天再用一次，全家就拿到這枚獎章。</p>
+</div>
+<div class="r2" style="margin-top: 12px; padding: 14px 16px; border-radius: 18px; background: #fff">
+<p style="margin: 0; font-size: 14px; font-weight: 600">孩子今天感覺怎麼樣？</p>
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-top: 10px">
+<sc-for list="{{ feels }}" as="f" hint-placeholder-count="3">
+<button class="chip" onClick="{{ f.pick }}" aria-pressed="{{ f.on }}" style="{{ f.style }}">{{ f.label }}</button>
+</sc-for>
+</div>
+</div>
+<div class="r3" style="margin-top: 12px; padding: 14px 16px 6px; border-radius: 18px; background: #fff">
+<p style="margin: 0 0 4px; font-size: 14px; font-weight: 600">收起來前</p>
+<sc-for list="{{ steps }}" as="s" hint-placeholder-count="3">
+<button onClick="{{ s.toggle }}" aria-pressed="{{ s.on }}" style="display: flex; align-items: center; gap: 12px; width: 100%; min-height: 46px; border: 0; background: none; font: inherit; color: #1F1D1A; cursor: pointer; text-align: left">
+<span style="{{ s.box }}">{{ s.mark }}</span><span class="st" style="{{ s.txt }}">{{ s.label }}</span>
+</button>
+</sc-for>
+</div>
+<a href="Home.html" style="position: absolute; left: 20px; right: 20px; bottom: 44px; display: grid; place-items: center; min-height: 56px; border-radius: 28px; background: #4F6644; color: #fff; font-size: 17px; font-weight: 500; text-decoration: none">回到今天</a>
+<div style="position: absolute; left: 50%; bottom: 8px; width: 134px; height: 5px; margin-left: -67px; border-radius: 3px; background: #1F1D1A"></div>
+</div>
+</template>
+<div id="screen"></div>
+<script>
+
+class Component extends DCLogic {
+  constructor(p){ super(p); this.state = { feel: 0, done: [false, false, false] }; }
+  renderVals() {
+    const F = ['舒服', '普通', '不太舒服'], S = ['拔下導流罩', '取出藥杯，泡水刷洗', '換一支新棉芯'], s = this.state;
+    return {
+      feels: F.map((l, i) => ({ label: l, on: s.feel === i ? 'true' : 'false', pick: () => this.setState({ feel: i }),
+        style: 'min-height:44px;border-radius:12px;font:inherit;font-size:14px;cursor:pointer;color:#1F1D1A;border:1.5px solid ' + (s.feel === i ? '#4F6644' : '#E4DDD1') + ';background:' + (s.feel === i ? '#EEF2E8' : '#fff') })),
+      steps: S.map((l, i) => ({ label: l, on: s.done[i] ? 'true' : 'false', mark: s.done[i] ? '✓' : i + 1,
+        toggle: () => { const a = s.done.slice(); a[i] = !a[i]; this.setState({ done: a }); },
+        box: 'flex:none;display:grid;place-items:center;width:26px;height:26px;border-radius:50%;font-size:13px;transition:background .25s,color .25s;' + (s.done[i] ? 'background:#4F6644;color:#fff' : 'background:#EFE9DE;color:#5E584F'),
+        txt: 'font-size:15px;' + (s.done[i] ? 'color:#8A8478;text-decoration:line-through' : '') }))
+    };
+  }
+}
+
+dcMount(Component, {});
+</script>
+</body></html>

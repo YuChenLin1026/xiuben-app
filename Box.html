@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#F4F1EB">
+<title>岫本・四瓶綜合盒</title>
+<style>html,body{margin:0;height:100%;overflow:hidden;background:#1F1D1A;-webkit-tap-highlight-color:transparent}#screen{position:fixed;left:0;top:0;width:390px;height:844px;transform-origin:0 0;overflow:hidden}</style>
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&amp;family=Noto+Serif+TC:wght@500;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#4F6644}a:hover{color:#3B4D33}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes zoomIn{from{opacity:0;transform:scale(.92) translateY(10px)}to{opacity:1;transform:none}}
+@keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+.hero{animation:zoomIn .7s cubic-bezier(.2,.8,.2,1) both}.fl{animation:floaty 4.5s .7s ease-in-out infinite}
+.r1{animation:rise .5s .2s both}.r2{animation:rise .5s .3s both}.r3{animation:rise .5s .4s both}
+.opt{transition:border-color .25s,background .25s}
+.dot{transition:transform .25s cubic-bezier(.2,.8,.2,1.4)}
+.pr{transition:opacity .2s}
+.add{transition:transform .15s,background .3s}.add:active{transform:scale(.97)}
+</style>
+
+<script src="dc.js"></script>
+</head><body>
+<template id="tpl">
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; box-sizing: border-box; background: #F4F1EB; color: #1F1D1A; font-family: -apple-system, 'SF Pro Text', 'Noto Sans TC', sans-serif">
+<div style="position: relative; padding: 54px 20px 0; background: linear-gradient(180deg, #E8EDE2 0%, #F4F1EB 100%)">
+<a href="Shop.html" aria-label="返回商店" style="display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: rgba(255,255,255,.8); color: #1F1D1A"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 5-7 7 7 7"/></svg></a>
+<div class="hero"><img class="fl" src="img/box.webp" alt="四瓶綜合盒，清嵐、玉容、潤金、棲月四瓶並排在白色紙盒裡" style="display: block; width: 100%; margin-top: 4px"></div>
+</div>
+<div style="padding: 10px 20px 0">
+<h1 class="r1" style="margin: 0; font-family: 'Noto Serif TC', serif; font-weight: 700; font-size: 26px">四瓶綜合盒</h1>
+<p class="r1" style="margin: 4px 0 0; font-size: 14px; color: #6E685E">四款各一瓶，每瓶 6 mL，是一次的份量。</p>
+<div class="r2" style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; margin-top: 12px; text-align: center">
+<sc-for list="{{ four }}" as="f" hint-placeholder-count="4">
+<div style="padding: 8px 2px; border-radius: 12px; background: #fff"><b style="display: block; font-family: 'Noto Serif TC', serif; font-size: 14px">{{ f.n }}</b><span style="font-size: 11px; color: #6E685E">{{ f.e }}</span></div>
+</sc-for>
+</div>
+<p class="r2" style="margin: 14px 0 6px; font-size: 13px; color: #6E685E">怎麼買</p>
+<div class="r3" style="display: flex; flex-direction: column; gap: 8px">
+<sc-for list="{{ opts }}" as="o" hint-placeholder-count="2">
+<button class="opt" onClick="{{ o.pick }}" aria-pressed="{{ o.on }}" style="{{ o.style }}">
+<span style="flex: none; display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; border: 2px solid {{ o.ring }}"><span class="dot" style="{{ o.dot }}"></span></span>
+<span style="flex: 1; text-align: left"><b style="display: block; font-size: 15px; font-weight: 600">{{ o.t }}</b><span style="font-size: 12.5px; color: #6E685E">{{ o.s }}</span></span>
+<b style="font-size: 16px">{{ o.p }}</b>
+</button>
+</sc-for>
+</div>
+<p class="r3" style="margin: 10px 2px 0; font-size: 12px; line-height: 1.6; color: #6E685E">空瓶可以寄回，每瓶換 20 雲點。價格暫定。配方為概念示意，非療效宣稱。</p>
+</div>
+<div style="position: absolute; left: 0; right: 0; bottom: 0; padding: 12px 20px 34px; background: rgba(244,241,235,.96); border-top: 1px solid #E4DDD1; display: flex; align-items: center; gap: 12px">
+<div role="group" aria-label="數量" style="display: flex; align-items: center; gap: 2px; border-radius: 22px; background: #fff">
+<button onClick="{{ dec }}" aria-label="減少一盒" style="width: 44px; height: 44px; border: 0; background: none; font: inherit; font-size: 20px; color: #1F1D1A; cursor: pointer">−</button>
+<b style="min-width: 18px; text-align: center; font-size: 16px">{{ q }}</b>
+<button onClick="{{ inc }}" aria-label="增加一盒" style="width: 44px; height: 44px; border: 0; background: none; font: inherit; font-size: 20px; color: #1F1D1A; cursor: pointer">+</button>
+</div>
+<a class="add" href="Cart.html" style="flex: 1; display: grid; place-items: center; min-height: 52px; border-radius: 26px; background: #4F6644; color: #fff; font-size: 15px; font-weight: 500; white-space: nowrap; padding: 0 12px; text-decoration: none">加入購物車</a>
+</div>
+</div>
+</template>
+<div id="screen"></div>
+<script>
+
+class Component extends DCLogic {
+  constructor(p){ super(p); this.state = { o: 0, q: 1 }; }
+  renderVals() {
+    const s = this.state, O = [['單次購買', '一盒，寄一次', 880], ['定期配送', '每 4 週寄一盒，可隨時取消', 792]];
+    const fmt = n => 'NT$' + n.toLocaleString('en-US');
+    return {
+      four: [['清嵐', '宣竅清息'], ['玉容', '養榮潤色'], ['潤金', '潤肺生津'], ['棲月', '寧心安神']].map(x => ({ n: x[0], e: x[1] })),
+      opts: O.map((o, i) => { const on = s.o === i; return { t: o[0] + (i ? '・9 折' : ''), s: o[1], p: fmt(o[2]), on: on ? 'true' : 'false', ring: on ? '#4F6644' : '#BDB5A8', pick: () => this.setState({ o: i }),
+        dot: 'display:block;width:10px;height:10px;border-radius:50%;background:#4F6644;transform:scale(' + (on ? 1 : 0) + ')',
+        style: 'display:flex;align-items:center;gap:12px;width:100%;padding:14px;border-radius:16px;font:inherit;color:#1F1D1A;cursor:pointer;border:2px solid ' + (on ? '#4F6644' : 'transparent') + ';background:#fff' }; }),
+      q: s.q, inc: () => this.setState({ q: Math.min(9, s.q + 1) }), dec: () => this.setState({ q: Math.max(1, s.q - 1) }),
+      total: fmt(O[s.o][2] * s.q)
+    };
+  }
+}
+
+dcMount(Component, {});
+</script>
+</body></html>

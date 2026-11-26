@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#F4F1EB">
+<title>岫本・成員狀態與指引</title>
+<style>html,body{margin:0;height:100%;overflow:hidden;background:#1F1D1A;-webkit-tap-highlight-color:transparent}#screen{position:fixed;left:0;top:0;width:390px;height:844px;transform-origin:0 0;overflow:hidden}</style>
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&amp;family=Noto+Serif+TC:wght@500;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#4F6644}a:hover{color:#3B4D33}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes dot{from{transform:scale(0)}to{transform:scale(1)}}
+@keyframes ring{from{stroke-dashoffset:213.6}}
+.r1{animation:rise .5s both}.r2{animation:rise .5s .08s both}.r3{animation:rise .5s .16s both}.r4{animation:rise .5s .24s both}
+.dt{animation:dot .4s cubic-bezier(.2,.8,.2,1.4) both}
+.rg{animation:ring 1.2s .3s cubic-bezier(.2,.8,.2,1) both}
+.gd{transition:background .2s}
+.more{display:grid;grid-template-rows:0fr;transition:grid-template-rows .35s cubic-bezier(.2,.8,.2,1)}.more.open{grid-template-rows:1fr}.more>div{overflow:hidden}
+.chev{transition:transform .3s}
+</style>
+
+<script src="dc.js"></script>
+</head><body>
+<template id="tpl">
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; box-sizing: border-box; background: #F4F1EB; color: #1F1D1A; font-family: -apple-system, 'SF Pro Text', 'Noto Sans TC', sans-serif; padding: 62px 20px 0">
+<a href="Records.html" style="display: inline-flex; align-items: center; gap: 2px; min-height: 44px; font-size: 17px; text-decoration: none"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 5-7 7 7 7"/></svg>紀錄</a>
+<div class="r1" style="display: flex; align-items: center; gap: 14px; margin-top: 6px">
+<span style="display: grid; place-items: center; width: 60px; height: 60px; border-radius: 50%; background: #E3EBDC; color: #3B4D33; font-size: 22px; font-weight: 700">孩</span>
+<div style="flex: 1"><h1 style="margin: 0; font-family: 'Noto Serif TC', serif; font-weight: 700; font-size: 28px">孩子</h1><p style="margin: 2px 0 0; font-size: 14px; color: #6E685E">7 歲・機身收合 250 mm</p></div>
+<div style="position: relative; width: 78px; height: 78px">
+<svg width="78" height="78" viewBox="0 0 78 78" aria-hidden="true" style="transform: rotate(-90deg)"><circle cx="39" cy="39" r="34" fill="none" stroke="#ECE6DB" stroke-width="7"/><circle class="rg" cx="39" cy="39" r="34" fill="none" stroke="#4F6644" stroke-width="7" stroke-linecap="round" stroke-dasharray="213.6" stroke-dashoffset="91.5"/></svg>
+<span style="position: absolute; inset: 0; display: grid; place-items: center; text-align: center; font-size: 11px; line-height: 1.2; color: #6E685E"><span><b style="display: block; font-size: 18px; color: #1F1D1A">4/7</b>這週</span></span>
+</div>
+</div>
+<div class="r2" style="margin-top: 16px; padding: 14px 16px; border-radius: 18px; background: #fff">
+<div style="display: flex; justify-content: space-between; font-size: 13px; color: #6E685E"><span>最近 7 次的感覺</span><span>家長點選</span></div>
+<div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 12px; height: 56px">
+<sc-for list="{{ feel }}" as="f" hint-placeholder-count="7">
+<div style="display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 11px; color: #6E685E"><span class="dt" style="{{ f.style }}"></span>{{ f.d }}</div>
+</sc-for>
+</div>
+<div style="display: flex; gap: 14px; margin-top: 10px; font-size: 11.5px; color: #6E685E"><span style="display: flex; align-items: center; gap: 5px"><i style="display: inline-block; width: 9px; height: 9px; border-radius: 50%; background: #4F6644"></i>舒服</span><span style="display: flex; align-items: center; gap: 5px"><i style="display: inline-block; width: 9px; height: 9px; border-radius: 50%; background: #C9B38E"></i>普通</span><span style="display: flex; align-items: center; gap: 5px"><i style="display: inline-block; width: 9px; height: 9px; border-radius: 50%; background: #B4553F"></i>不太舒服</span></div>
+</div>
+<h2 class="r3" style="margin: 18px 0 8px; font-size: 13px; font-weight: 500; color: #6E685E; letter-spacing: 0.08em">給這位家人的提醒</h2>
+<div class="r3" style="display: flex; flex-direction: column; gap: 8px">
+<sc-for list="{{ guides }}" as="g" hint-placeholder-count="3">
+<div class="gd" style="border-radius: 16px; background: #fff; overflow: hidden">
+<button onClick="{{ g.toggle }}" aria-expanded="{{ g.exp }}" style="display: flex; align-items: center; gap: 12px; width: 100%; padding: 14px 16px; border: 0; background: none; font: inherit; color: #1F1D1A; text-align: left; cursor: pointer">
+<span style="{{ g.icon }}">{{ g.tag }}</span>
+<b style="flex: 1; font-size: 15px; font-weight: 500">{{ g.title }}</b>
+<svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8A8478" stroke-width="2.2" stroke-linecap="round" aria-hidden="true" style="{{ g.chev }}"><path d="m6 9 6 6 6-6"/></svg>
+</button>
+<div class="more {{ g.cls }}"><div><p style="margin: 0; padding: 0 16px 14px 56px; font-size: 13.5px; line-height: 1.7; color: #4A453E">{{ g.body }}</p></div></div>
+</div>
+</sc-for>
+</div>
+<p class="r4" style="margin: 12px 4px 0; font-size: 12px; line-height: 1.6; color: #6E685E">這些是使用習慣的提醒，不是醫療建議。身體不舒服，請找醫師。</p>
+<div style="position: absolute; left: 50%; bottom: 8px; width: 134px; height: 5px; margin-left: -67px; border-radius: 3px; background: #1F1D1A"></div>
+</div>
+</template>
+<div id="screen"></div>
+<script>
+
+class Component extends DCLogic {
+  constructor(p){ super(p); this.state = { open: 0 }; }
+  renderVals() {
+    const C = { 0: '#4F6644', 1: '#C9B38E', 2: '#B4553F' }, H = { 0: 40, 1: 28, 2: 16 };
+    const F = [[0, '11/20'], [0, '11/21'], [1, '11/22'], [0, '11/23'], [0, '11/24'], [0, '11/25'], [0, '11/26']];
+    const G = [
+      ['時', '固定在晚上 8–9 點', '最近 4 次都在這個時段用。固定時間比較容易養成習慣，系統會在 8:30 提醒。', '#EEF2E8', '#3B4D33'],
+      ['洗', '藥杯有 1 次沒勾清洗', '11/24 那次結束後沒有勾「泡水刷洗」。藥液留在杯裡容易堵住霧化片，下次用前先洗一次。', '#F3EBDD', '#6B4E25'],
+      ['停', '連續兩次不太舒服，就先停', '如果連續兩次點了「不太舒服」，App 會建議暫停使用，並請家長諮詢醫師。目前沒有這個情況。', '#F4E4DF', '#7A3424']];
+    return {
+      feel: F.map((f, i) => ({ d: f[1].slice(3), style: 'display:block;width:14px;border-radius:7px;height:' + H[f[0]] + 'px;background:' + C[f[0]] + ';animation-delay:' + (0.3 + i * 0.06) + 's' })),
+      guides: G.map((g, i) => { const o = this.state.open === i; return { tag: g[0], title: g[1], body: g[2], exp: o ? 'true' : 'false', cls: o ? 'open' : '',
+        toggle: () => this.setState({ open: o ? -1 : i }), chev: 'transform:rotate(' + (o ? 180 : 0) + 'deg)',
+        icon: 'flex:none;display:grid;place-items:center;width:28px;height:28px;border-radius:8px;font-size:13px;font-weight:700;background:' + g[3] + ';color:' + g[4] }; })
+    };
+  }
+}
+
+dcMount(Component, {});
+</script>
+</body></html>

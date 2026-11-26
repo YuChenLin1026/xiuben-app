@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#F4F1EB">
+<title>岫本・歡迎與配對</title>
+<style>html,body{margin:0;height:100%;overflow:hidden;background:#1F1D1A;-webkit-tap-highlight-color:transparent}#screen{position:fixed;left:0;top:0;width:390px;height:844px;transform-origin:0 0;overflow:hidden}</style>
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&amp;family=Noto+Serif+TC:wght@500;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#4F6644}a:hover{color:#3B4D33}
+@keyframes ring{0%{transform:scale(.55);opacity:.55}100%{transform:scale(1.5);opacity:0}}
+@keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes pop{0%{transform:scale(.6);opacity:0}70%{transform:scale(1.08)}100%{transform:scale(1);opacity:1}}
+.ring{position:absolute;left:50%;top:50%;width:260px;height:260px;margin:-130px 0 0 -130px;border-radius:50%;border:1.5px solid #4F6644;animation:ring 2.4s ease-out infinite}
+.ring.b{animation-delay:.8s}.ring.c{animation-delay:1.6s}
+.dev{animation:floaty 4s ease-in-out infinite}
+.rise{animation:rise .6s cubic-bezier(.2,.8,.2,1) both}
+.spin{animation:spin 1s linear infinite;transform-origin:50% 50%}
+.pop{animation:pop .5s cubic-bezier(.2,.8,.2,1) both}
+.btn{transition:transform .15s,background .25s}.btn:active{transform:scale(.97)}
+</style>
+
+<script src="dc.js"></script>
+</head><body>
+<template id="tpl">
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; box-sizing: border-box; background: #F4F1EB; color: #1F1D1A; font-family: -apple-system, 'SF Pro Text', 'Noto Sans TC', sans-serif; display: flex; flex-direction: column; padding: 70px 24px 34px">
+<div style="display: flex; align-items: center; gap: 10px">
+<svg viewBox="0 0 100 64" width="34" height="22" aria-hidden="true" style="fill: #4F6644"><path d="M100.0 0.7L96.2 4.0L91.6 7.2L87.2 9.4L80.1 11.7L75.8 12.5L69.5 13.2L53.3 13.0L49.0 13.3L42.4 14.4L38.1 15.7L33.1 17.8L28.8 20.1L25.3 22.5L18.0 28.8L12.5 35.5L8.9 41.0L7.9 43.2L12.3 39.4L18.8 35.0L26.1 31.5L32.8 29.3L37.8 28.2L44.1 27.4L60.6 27.3L65.5 26.8L70.7 25.7L77.5 23.3L82.3 20.9L85.9 18.5L91.6 13.5L96.5 7.2ZM90.8 23.3L83.4 29.3L78.0 32.6L72.8 35.0L65.2 37.4L57.3 38.6L36.5 39.0L30.7 39.8L22.8 42.1L17.9 44.5L16.6 45.5L15.8 45.6L8.9 51.1L4.4 56.0L4.1 56.8L1.9 59.7L0.0 63.3L3.3 60.5L6.8 58.1L11.4 55.7L17.7 53.5L22.9 52.4L30.2 51.9L34.6 51.9L41.1 52.4L51.1 52.3L58.1 51.0L65.2 48.5L73.1 44.2L79.1 39.4L82.6 36.0L82.6 35.6L87.0 30.3L89.2 26.6Z"/></svg>
+<span style="font-family: 'Noto Serif TC', serif; font-weight: 700; font-size: 20px; letter-spacing: 0.3em">岫本</span>
+</div>
+<h1 class="rise" style="margin: 28px 0 0; font-family: 'Noto Serif TC', serif; font-weight: 700; font-size: 32px; line-height: 1.3">把岫本<br>連上這支手機</h1>
+<p class="rise" style="margin: 10px 0 0; font-size: 15px; line-height: 1.6; color: #5E584F; animation-delay: .1s">長按機身正面的 LOGO 兩秒，燈會開始閃。</p>
+<div style="position: relative; height: 330px; margin-top: 18px">
+<sc-if value="{{ searching }}" hint-placeholder-val="{{ true }}">
+<div class="ring"></div><div class="ring b"></div><div class="ring c"></div>
+</sc-if>
+<sc-if value="{{ notFound }}" hint-placeholder-val="{{ true }}">
+<img class="dev" src="img/device.webp" alt="" style="position: absolute; left: 50%; top: 18px; width: 128px; margin-left: -64px; filter: grayscale(1) brightness(1.25) contrast(.5); opacity: .45">
+</sc-if>
+<sc-if value="{{ isFound }}" hint-placeholder-val="{{ false }}">
+<div class="pop" style="position: absolute; left: 50%; top: 18px; width: 128px; margin-left: -64px"><img class="dev" src="{{ devImg }}" alt="{{ devName }}" style="display: block; width: 128px"></div>
+</sc-if>
+</div>
+<div role="group" aria-label="原型：要找到哪一台" style="display: flex; gap: 6px; justify-content: center; margin-top: -6px; font-size: 12px; color: #6E685E">
+<span style="align-self: center">（原型）找到：</span>
+<sc-for list="{{ models }}" as="m" hint-placeholder-count="2">
+<button onClick="{{ m.pick }}" aria-pressed="{{ m.on }}" style="{{ m.style }}">{{ m.label }}</button>
+</sc-for>
+</div>
+<sc-if value="{{ isIdle }}" hint-placeholder-val="{{ true }}">
+<div class="rise" style="display: flex; flex-direction: column; gap: 12px; margin-top: auto">
+<button class="btn" onClick="{{ search }}" style="min-height: 54px; border: 0; border-radius: 27px; background: #4F6644; color: #fff; font: inherit; font-size: 17px; font-weight: 500; letter-spacing: 0.06em; cursor: pointer">尋找岫本</button>
+<p style="margin: 0; text-align: center; font-size: 13px; color: #6E685E">需要開啟藍牙。</p>
+</div>
+</sc-if>
+<sc-if value="{{ isSearching }}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: auto; min-height: 54px; font-size: 15px; color: #5E584F">
+<svg class="spin" width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="8" fill="none" stroke="#C9C1B3" stroke-width="2"/><path d="M10 2a8 8 0 0 1 8 8" fill="none" stroke="#4F6644" stroke-width="2" stroke-linecap="round"/></svg>
+正在找附近的岫本⋯
+</div>
+</sc-if>
+<sc-if value="{{ isFound }}" hint-placeholder-val="{{ false }}">
+<div class="rise" style="margin-top: auto; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; align-items: center; gap: 14px; background: #fff; border-radius: 18px; padding: 14px 16px">
+<img src="{{ devImg }}" alt="" style="width: 26px">
+<div style="flex: 1"><div style="font-weight: 500; font-size: 16px">{{ devName }}</div><div style="font-size: 13px; color: #6E685E">就在附近</div></div>
+<sc-if value="{{ isPaired }}" hint-placeholder-val="{{ false }}"><span class="pop" style="display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: #4F6644; color: #fff; font-size: 15px">✓</span></sc-if>
+</div>
+<sc-if value="{{ notPaired }}" hint-placeholder-val="{{ true }}">
+<button class="btn" onClick="{{ pair }}" style="min-height: 54px; border: 0; border-radius: 27px; background: #4F6644; color: #fff; font: inherit; font-size: 17px; font-weight: 500; cursor: pointer">連線</button>
+</sc-if>
+<sc-if value="{{ isPaired }}" hint-placeholder-val="{{ false }}">
+<a href="Home.html" class="btn" style="display: grid; place-items: center; min-height: 54px; border-radius: 27px; background: #1F1D1A; color: #fff; font-size: 17px; font-weight: 500; text-decoration: none">完成，進入岫本</a>
+</sc-if>
+</div>
+</sc-if>
+<div style="position: absolute; left: 50%; bottom: 8px; width: 134px; height: 5px; margin-left: -67px; border-radius: 3px; background: #1F1D1A"></div>
+</div>
+</template>
+<div id="screen"></div>
+<script>
+
+class Component extends DCLogic {
+  constructor(p){ super(p); this.state = { step: 'idle', k: (this.props.model ?? '綠色款') === '黑色款' ? 1 : 0 }; }
+  componentWillUnmount(){ clearTimeout(this.t); }
+  renderVals() {
+    const s = this.state.step, k = this.state.k;
+    const M = [['綠色款', 'img/device.webp'], ['黑色款', 'img/device_k.webp']];
+    return {
+      devImg: M[k][1], devName: '岫本・' + M[k][0], notFound: !(s === 'found' || s === 'paired'),
+      models: M.map((m, i) => ({ label: m[0], on: k === i ? 'true' : 'false', pick: () => this.setState({ k: i }),
+        style: 'min-height:32px;padding:0 12px;border-radius:16px;font:inherit;font-size:12px;cursor:pointer;color:#1F1D1A;border:1px solid ' + (k === i ? '#4F6644' : '#DDD6CA') + ';background:' + (k === i ? '#EEF2E8' : 'transparent') })),
+      searching: s === 'searching' || s === 'idle',
+      isIdle: s === 'idle', isSearching: s === 'searching',
+      isFound: s === 'found' || s === 'paired', isPaired: s === 'paired', notPaired: s === 'found',
+      search: () => { this.setState({ step: 'searching' }); clearTimeout(this.t); this.t = setTimeout(() => this.setState({ step: 'found' }), 1800); },
+      pair: () => this.setState({ step: 'paired' })
+    };
+  }
+}
+
+dcMount(Component, {"model": "綠色款"});
+</script>
+</body></html>

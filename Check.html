@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#F4F1EB">
+<title>岫本・裝好確認</title>
+<style>html,body{margin:0;height:100%;overflow:hidden;background:#1F1D1A;-webkit-tap-highlight-color:transparent}#screen{position:fixed;left:0;top:0;width:390px;height:844px;transform-origin:0 0;overflow:hidden}</style>
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&amp;family=Noto+Serif+TC:wght@500;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#4F6644}a:hover{color:#3B4D33}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes draw{from{stroke-dashoffset:24}to{stroke-dashoffset:0}}
+@keyframes glow{0%,100%{box-shadow:0 10px 24px rgba(79,102,68,.3),0 0 0 0 rgba(79,102,68,.25)}50%{box-shadow:0 10px 24px rgba(79,102,68,.3),0 0 0 12px rgba(79,102,68,0)}}
+.r1{animation:rise .5s both}.r2{animation:rise .5s .08s both}.r3{animation:rise .5s .16s both}.r4{animation:rise .5s .24s both}
+.item{transition:border-color .25s,background .25s,transform .15s}.item:active{transform:scale(.98)}
+.box{transition:background .25s,border-color .25s}
+.tick{stroke-dasharray:24;animation:draw .35s ease-out both}
+.go{transition:background .3s,transform .15s,color .3s}.go:active{transform:scale(.97)}
+.go.ready{animation:glow 2.2s ease-in-out infinite}
+</style>
+
+<script src="dc.js"></script>
+</head><body>
+<template id="tpl">
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; box-sizing: border-box; background: #F4F1EB; color: #1F1D1A; font-family: -apple-system, 'SF Pro Text', 'Noto Sans TC', sans-serif; padding: 62px 20px 0">
+<a href="Found.html" style="display: inline-flex; align-items: center; gap: 2px; min-height: 44px; font-size: 17px; text-decoration: none"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 5-7 7 7 7"/></svg>藥瓶</a>
+<div class="r1" style="display: flex; gap: 6px; margin-top: 8px" aria-label="步驟 3／4">
+<span style="flex: 1; height: 4px; border-radius: 2px; background: #4F6644"></span><span style="flex: 1; height: 4px; border-radius: 2px; background: #4F6644"></span><span style="flex: 1; height: 4px; border-radius: 2px; background: #4F6644"></span><span style="flex: 1; height: 4px; border-radius: 2px; background: #DDD6CA"></span>
+</div>
+<h1 class="r1" style="margin: 18px 0 0; font-family: 'Noto Serif TC', serif; font-weight: 700; font-size: 30px">開始前，確認三件事</h1>
+<p class="r2" style="margin: 6px 0 0; font-size: 15px; line-height: 1.6; color: #6E685E">機器看不到這些，所以請你看一眼，點一下打勾。</p>
+<div class="r3" style="display: flex; flex-direction: column; gap: 10px; margin-top: 20px">
+<sc-for list="{{ items }}" as="it" hint-placeholder-count="3">
+<button class="item" onClick="{{ it.toggle }}" aria-pressed="{{ it.on }}" style="{{ it.style }}">
+<span class="box" style="{{ it.box }}">
+<sc-if value="{{ it.isOn }}" hint-placeholder-val="{{ false }}"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path class="tick" d="M3 8.5 6.5 12 13 4.5" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></sc-if>
+</span>
+<span style="flex: 1; text-align: left"><b style="display: block; font-size: 16px; font-weight: 600">{{ it.title }}</b><span style="display: block; margin-top: 3px; font-size: 13.5px; color: #6E685E; line-height: 1.5">{{ it.sub }}</span></span>
+</button>
+</sc-for>
+</div>
+<p class="r4" style="margin: 16px 2px 0; font-size: 13px; color: #6E685E">{{ count }}</p>
+<sc-if value="{{ ready }}" hint-placeholder-val="{{ false }}">
+<a class="go ready" href="Session.html" style="position: absolute; left: 20px; right: 20px; bottom: 44px; display: grid; place-items: center; min-height: 56px; border-radius: 28px; background: #4F6644; color: #fff; font-size: 17px; font-weight: 500; text-decoration: none">開始 10 分鐘</a>
+</sc-if>
+<sc-if value="{{ notReady }}" hint-placeholder-val="{{ true }}">
+<button disabled style="position: absolute; left: 20px; right: 20px; bottom: 44px; min-height: 56px; border: 0; border-radius: 28px; background: #D4CEC3; color: #6E685E; font: inherit; font-size: 17px">三件都勾了才能開始</button>
+</sc-if>
+<div style="position: absolute; left: 50%; bottom: 8px; width: 134px; height: 5px; margin-left: -67px; border-radius: 3px; background: #1F1D1A"></div>
+</div>
+</template>
+<div id="screen"></div>
+<script>
+
+class Component extends DCLogic {
+  constructor(p){ super(p); this.state = { on: [true, false, false] }; }
+  renderVals() {
+    const T = [['藥瓶已旋入瓶座', 'No.01 清嵐，轉到卡住為止'], ['機身拉到「收合」', '孩子坐著用，250 mm 剛好'], ['罩口對準口鼻', '臉和罩口留大約 5 公分，不用貼著']];
+    const on = this.state.on, n = on.filter(Boolean).length;
+    return {
+      ready: n === 3, notReady: n < 3, count: n === 3 ? '都好了。' : '已確認 ' + n + '／3',
+      items: T.map((t, i) => ({ title: t[0], sub: t[1], isOn: on[i], on: on[i] ? 'true' : 'false',
+        toggle: () => { const a = on.slice(); a[i] = !a[i]; this.setState({ on: a }); },
+        style: 'display:flex;align-items:center;gap:14px;width:100%;padding:16px;border-radius:18px;font:inherit;color:#1F1D1A;cursor:pointer;border:2px solid ' + (on[i] ? '#4F6644' : 'transparent') + ';background:#fff',
+        box: 'flex:none;display:grid;place-items:center;width:28px;height:28px;border-radius:50%;border:2px solid ' + (on[i] ? '#4F6644' : '#BDB5A8') + ';background:' + (on[i] ? '#4F6644' : 'transparent') })) };
+  }
+}
+
+dcMount(Component, {});
+</script>
+</body></html>
